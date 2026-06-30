@@ -55,10 +55,6 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.save(item);
     }
 
-    public Item saveItem(Item item) {
-        return itemRepository.save(item);
-    }
-
     public Item updateItem(Long id, UpdateItemRequest request) {
         Item item = itemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Item with ID " + id + " not found"));

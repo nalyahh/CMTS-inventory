@@ -28,8 +28,10 @@ public record CreateItemRequestDto(
 
         private static final String ERROR_MESSAGE_NAME =
                 "Name must be between 1 and 255 characters";
+
         private static final String ERROR_MESSAGE_LOCATION =
                 "Location must be between 1 and 255 characters";
+
         private static final String ERROR_MESSAGE_NOTES =
                 "Notes have a max of 1000 characters";
 }

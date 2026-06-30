@@ -1,6 +1,7 @@
 package com.CMTS.inventory.controller;
 
 import com.CMTS.inventory.domain.dto.ErrorDto;
+import com.CMTS.inventory.exception.ItemNotAvailableException;
 import com.CMTS.inventory.exception.ResourceNotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDto> handleResourceNotFoundException(ResourceNotFoundException ex) {
         ErrorDto errorDto = new ErrorDto(ex.getMessage());
         return new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ItemNotAvailableException.class)
+    public ResponseEntity<ErrorDto> handleItemNotAvailableException(ItemNotAvailableException ex) {
+        ErrorDto errorDto = new ErrorDto(ex.getMessage());
+        return new ResponseEntity<>(errorDto, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

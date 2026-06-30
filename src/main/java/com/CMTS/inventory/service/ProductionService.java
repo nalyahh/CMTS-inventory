@@ -13,7 +13,7 @@ public interface ProductionService {
 
     Production getProductionByName(String name);
 
-    Production saveProduction(CreateProductionRequest request);
+    Production createProduction(CreateProductionRequest createProductionRequest);
 
     void deleteProduction(Long id);
 }

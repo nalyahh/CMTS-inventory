@@ -1,5 +1,6 @@
 package com.CMTS.inventory.service;
 
+import com.CMTS.inventory.domain.CreateItemRequest;
 import com.CMTS.inventory.domain.CreateUserRequest;
 import com.CMTS.inventory.domain.entity.User;
 
@@ -13,7 +14,8 @@ public interface UserService {
 
     User getUserByEmail(String email);
 
-    User saveUser(CreateUserRequest request);
+    User createUser(CreateUserRequest createUserRequest);
 
     void deleteUser(Long id);
+
 }

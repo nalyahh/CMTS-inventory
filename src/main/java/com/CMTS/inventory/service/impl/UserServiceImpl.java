@@ -1,8 +1,10 @@
 package com.CMTS.inventory.service.impl;
 
+import com.CMTS.inventory.domain.CreateItemRequest;
 import com.CMTS.inventory.domain.CreateUserRequest;
 import com.CMTS.inventory.domain.entity.Production;
 import com.CMTS.inventory.domain.entity.User;
+import com.CMTS.inventory.exception.ResourceNotFoundException;
 import com.CMTS.inventory.repository.ProductionRepository;
 import com.CMTS.inventory.repository.UserRepository;
 import com.CMTS.inventory.service.UserService;
@@ -26,19 +28,20 @@ public class UserServiceImpl implements UserService {
     }
 
     public User getUserById(Long id) {
-        return userRepository.findById(id).orElse(null);
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User with ID " + id + " not found"));
     }
-
     public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElse(null);
-    }
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User with email " + email + " not found"));    }
 
-    public User saveUser(CreateUserRequest request) {
-            User user = new User();
-            user.setName(request.name());
-            user.setEmail(request.email());
-            user.setPassword(request.password());
-            user.setRole(request.role());
+    @Override
+    public User createUser(CreateUserRequest request) {
+        User user = new User();
+        user.setName(request.name());
+        user.setEmail(request.email());
+        user.setPassword(request.password());
+        user.setRole(request.role());
         if (request.productionId() != null) {
             Production production = productionRepository.findById(request.productionId())
                     .orElseThrow(() -> new RuntimeException("Production not found"));

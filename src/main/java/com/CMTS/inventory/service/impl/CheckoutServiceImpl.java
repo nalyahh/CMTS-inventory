@@ -5,6 +5,8 @@ import com.CMTS.inventory.domain.entity.Checkout;
 import com.CMTS.inventory.domain.entity.Item;
 import com.CMTS.inventory.domain.entity.Production;
 import com.CMTS.inventory.domain.entity.User;
+import com.CMTS.inventory.exception.ItemNotAvailableException;
+import com.CMTS.inventory.exception.ResourceNotFoundException;
 import com.CMTS.inventory.repository.CheckoutRepository;
 import com.CMTS.inventory.repository.ItemRepository;
 import com.CMTS.inventory.repository.ProductionRepository;
@@ -34,16 +36,16 @@ public class CheckoutServiceImpl implements CheckoutService {
 
     public Checkout checkoutItem(CheckoutRequest request) {
         User user = userRepository.findById(request.userId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User with ID " + request.userId() + " not found"));
 
         Production production = productionRepository.findById(request.productionId())
-                .orElseThrow(() -> new RuntimeException("Production not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Production with ID " + request.productionId() + " not found"));
 
         Item item = itemRepository.findById(request.itemId())
-                .orElseThrow(() -> new RuntimeException("Item not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Item with ID " + request.itemId() + " not found"));
 
         if (item.getStatus() != Item.Status.AVAILABLE)
-            throw new RuntimeException("Item is not available");
+            throw new ItemNotAvailableException("Item with ID " + request.itemId() + " is not available");
 
         Checkout checkout = new Checkout();
         checkout.setItem(item);
@@ -57,11 +59,11 @@ public class CheckoutServiceImpl implements CheckoutService {
     }
 
     public Checkout checkInItem(Long itemID) {
-        Item item = itemRepository.findById(itemID).orElseThrow(() -> new RuntimeException("Item not found"));
+        Item item = itemRepository.findById(itemID).orElseThrow(() -> new ResourceNotFoundException("Item with ID " + itemID + " not found"));
         List<Checkout> activeCheckouts = checkoutRepository.findByItemAndReturnedAtIsNull(item);
 
         if(activeCheckouts.isEmpty())
-            throw new RuntimeException("No active checkout found");
+            throw new ResourceNotFoundException("No active checkout found for item " + itemID);
         Checkout checkout = activeCheckouts.getFirst();
 
         checkout.setReturnedAt(LocalDateTime.now());
