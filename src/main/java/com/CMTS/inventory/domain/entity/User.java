@@ -2,6 +2,9 @@ package com.CMTS.inventory.domain.entity;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name="users")
 public class User {
@@ -23,16 +26,19 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @ManyToOne
-    @JoinColumn(name = "production_id", nullable = true)
-    private Production production;
+    @ManyToMany
+    @JoinTable(
+            name = "user_productions",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "production_id"))
+    private Set<Production> productions = new HashSet<>();
 
-    public Production getProduction() {
-        return production;
+    public Set<Production> getProductions() {
+        return productions;
     }
 
-    public void setProduction(Production production) {
-        this.production = production;
+    public void setProductions(Set<Production> productions) {
+        this.productions = productions;
     }
 
     public Long getId() {

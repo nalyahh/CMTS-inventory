@@ -15,5 +15,7 @@ public interface ProductionService {
 
     Production createProduction(CreateProductionRequest createProductionRequest);
 
+    Production archiveProduction(Long id);
+
     void deleteProduction(Long id);
 }

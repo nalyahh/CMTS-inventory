@@ -5,6 +5,7 @@ import com.CMTS.inventory.domain.entity.Checkout;
 import com.CMTS.inventory.domain.entity.Item;
 import com.CMTS.inventory.domain.entity.Production;
 import com.CMTS.inventory.domain.entity.User;
+import com.CMTS.inventory.exception.ArchivedProductionException;
 import com.CMTS.inventory.exception.ItemNotAvailableException;
 import com.CMTS.inventory.exception.ResourceNotFoundException;
 import com.CMTS.inventory.repository.CheckoutRepository;
@@ -40,6 +41,8 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         Production production = productionRepository.findById(request.productionId())
                 .orElseThrow(() -> new ResourceNotFoundException("Production with ID " + request.productionId() + " not found"));
+        if (production.isArchived())
+            throw new ArchivedProductionException("Production " + production.getName() + " is archived and cannot be checked out against");
 
         Item item = itemRepository.findById(request.itemId())
                 .orElseThrow(() -> new ResourceNotFoundException("Item with ID " + request.itemId() + " not found"));

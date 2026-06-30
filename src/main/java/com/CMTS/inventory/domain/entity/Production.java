@@ -18,6 +18,8 @@ public class Production {
     private LocalDate startDate;
     private LocalDate endDate;
 
+    private boolean archived = false;
+
     public Long getId() {
         return id;
     }
@@ -48,5 +50,13 @@ public class Production {
 
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
     }
 }

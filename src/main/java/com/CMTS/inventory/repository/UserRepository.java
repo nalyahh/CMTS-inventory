@@ -15,7 +15,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findByRole(User.Role role);
 
-    List<User> findByProduction (Production production);
-
-
+    List<User> findByProductions(Production production);
 }

@@ -56,6 +56,13 @@ public class ProductionController {
         return ResponseEntity.ok(productionDto);
     }
 
+    @PatchMapping("/{id}/archive")
+    public ResponseEntity<ProductionDto> archiveProduction(@PathVariable Long id) {
+        Production production = productionService.archiveProduction(id);
+        ProductionDto productionDto = productionMapper.toDto(production);
+        return ResponseEntity.ok(productionDto);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduction(@PathVariable Long id) {
         productionService.deleteProduction(id);

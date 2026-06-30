@@ -1,6 +1,5 @@
 package com.CMTS.inventory.service.impl;
 
-import com.CMTS.inventory.domain.CreateItemRequest;
 import com.CMTS.inventory.domain.CreateUserRequest;
 import com.CMTS.inventory.domain.entity.Production;
 import com.CMTS.inventory.domain.entity.User;
@@ -42,10 +41,12 @@ public class UserServiceImpl implements UserService {
         user.setEmail(request.email());
         user.setPassword(request.password());
         user.setRole(request.role());
-        if (request.productionId() != null) {
-            Production production = productionRepository.findById(request.productionId())
-                    .orElseThrow(() -> new RuntimeException("Production not found"));
-            user.setProduction(production);
+        if (request.productionIds() != null && !request.productionIds().isEmpty()) {
+            for (Long productionId : request.productionIds()) {
+                Production production = productionRepository.findById(productionId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Production with ID " + productionId + " not found"));
+                user.getProductions().add(production);
+            }
         }
         return userRepository.save(user);
     }

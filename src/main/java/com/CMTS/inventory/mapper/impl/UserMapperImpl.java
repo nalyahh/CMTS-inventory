@@ -3,6 +3,7 @@ package com.CMTS.inventory.mapper.impl;
 import com.CMTS.inventory.domain.CreateUserRequest;
 import com.CMTS.inventory.domain.dto.CreateUserRequestDto;
 import com.CMTS.inventory.domain.dto.UserDto;
+import com.CMTS.inventory.domain.entity.Production;
 import com.CMTS.inventory.domain.entity.User;
 import com.CMTS.inventory.mapper.UserMapper;
 import org.springframework.stereotype.Component;
@@ -16,7 +17,7 @@ public class UserMapperImpl implements UserMapper {
                 dto.email(),
                 dto.password(),
                 dto.role(),
-                dto.productionId()
+                dto.productionIds()
         );
     }
 
@@ -27,7 +28,9 @@ public class UserMapperImpl implements UserMapper {
                 user.getName(),
                 user.getEmail(),
                 user.getRole(),
-                user.getProduction() != null ? user.getProduction().getId() : null
+                user.getProductions().stream()
+                        .map(Production::getId)
+                        .toList()
         );
     }
 }
