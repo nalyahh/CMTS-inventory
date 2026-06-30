@@ -1,4 +1,4 @@
-package com.CMTS.inventory.model;
+package com.CMTS.inventory.domain.entity;
 
 import jakarta.persistence.*;
 
@@ -12,6 +12,7 @@ public class Production {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String name;
 
     private LocalDate startDate;

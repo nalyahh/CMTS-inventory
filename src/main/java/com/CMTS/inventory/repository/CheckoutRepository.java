@@ -1,9 +1,9 @@
 package com.CMTS.inventory.repository;
 
-import com.CMTS.inventory.model.Checkout;
-import com.CMTS.inventory.model.Production;
-import com.CMTS.inventory.model.User;
-import com.CMTS.inventory.model.Item;
+import com.CMTS.inventory.domain.entity.Checkout;
+import com.CMTS.inventory.domain.entity.Production;
+import com.CMTS.inventory.domain.entity.User;
+import com.CMTS.inventory.domain.entity.Item;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

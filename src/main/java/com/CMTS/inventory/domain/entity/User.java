@@ -1,4 +1,4 @@
-package com.CMTS.inventory.model;
+package com.CMTS.inventory.domain.entity;
 
 import jakarta.persistence.*;
 

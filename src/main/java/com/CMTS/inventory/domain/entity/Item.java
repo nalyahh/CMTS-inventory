@@ -1,4 +1,4 @@
-package com.CMTS.inventory.model;
+package com.CMTS.inventory.domain.entity;
 
 import jakarta.persistence.*;
 
@@ -8,6 +8,7 @@ public class Item {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(updatable = false, nullable = false)
     private Long id;
 
     private int quantity;
@@ -36,7 +37,6 @@ public class Item {
     @ManyToOne
     @JoinColumn(name = "production_id")
     private Production production;
-
 
     public Long getId() {
         return id;

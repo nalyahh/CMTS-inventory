@@ -1,37 +1,23 @@
 package com.CMTS.inventory.service;
 
-import com.CMTS.inventory.model.Item;
-import com.CMTS.inventory.repository.ItemRepository;
-import org.springframework.stereotype.Service;
+import com.CMTS.inventory.domain.CreateItemRequest;
+import com.CMTS.inventory.domain.UpdateItemRequest;
+import com.CMTS.inventory.domain.entity.Item;
 
 import java.util.List;
 
-@Service
-public class ItemService {
+public interface ItemService {
+    List<Item> getAllItems();
 
-    private final ItemRepository itemRepository;
+    Item getItemById(Long id);
 
-    public ItemService(ItemRepository itemRepository) {
-        this.itemRepository = itemRepository;
-    }
+    List<Item> getItemByStatus(Item.Status status);
 
-    public List<Item> getAllItems() {
-        return itemRepository.findAll();
-    }
+    Item createItem(CreateItemRequest request);
 
-    public Item getItemById(Long id) {
-        return itemRepository.findById(id).orElse(null);
-    }
+    Item updateItem(Long id, UpdateItemRequest request);
 
-    public List<Item> getItemByStatus(Item.Status status) {
-        return itemRepository.findByStatus(status);
-    }
+    Item saveItem(Item item);
 
-    public Item saveItem(Item item) {
-        return itemRepository.save(item);
-    }
-
-    public void deleteItem(Long id) {
-        itemRepository.deleteById(id);
-    }
+    void deleteItem(Long id);
 }
