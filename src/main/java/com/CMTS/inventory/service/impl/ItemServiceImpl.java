@@ -4,6 +4,7 @@ import com.CMTS.inventory.domain.CreateItemRequest;
 import com.CMTS.inventory.domain.UpdateItemRequest;
 import com.CMTS.inventory.domain.entity.Item;
 import com.CMTS.inventory.domain.entity.Production;
+import com.CMTS.inventory.exception.ResourceNotFoundException;
 import com.CMTS.inventory.repository.ItemRepository;
 import com.CMTS.inventory.repository.ProductionRepository;
 import com.CMTS.inventory.service.ItemService;
@@ -29,7 +30,8 @@ public class ItemServiceImpl implements ItemService {
 
     public Item getItemById(Long id) {
         return itemRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Item not found"));    }
+                .orElseThrow(() -> new ResourceNotFoundException("Item with ID " + id + " not found"));
+    }
 
     public List<Item> getItemByStatus(Item.Status status) {
         return itemRepository.findByStatus(status);
@@ -44,8 +46,7 @@ public class ItemServiceImpl implements ItemService {
         item.setQuantity(request.quantity());
         if (request.productionId() != null) {
             Production production = productionRepository.findById(request.productionId())
-                    .orElseThrow(() -> new RuntimeException("Production not found"));
-            item.setProduction(production);
+                    .orElseThrow(() -> new ResourceNotFoundException("Production with ID " + request.productionId() + " not found"));            item.setProduction(production);
         }
         item.setNotes(request.notes());
         item.setPhotoURL(request.photoURL());
@@ -60,14 +61,14 @@ public class ItemServiceImpl implements ItemService {
 
     public Item updateItem(Long id, UpdateItemRequest request) {
         Item item = itemRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Item not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Item with ID " + id + " not found"));
         item.setName(request.name());
         item.setLocation(request.location());
         item.setCategory(request.category());
         item.setQuantity(request.quantity());
         if (request.productionId() != null) {
             Production production = productionRepository.findById(request.productionId())
-                    .orElseThrow(() -> new RuntimeException("Production not found"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Production with ID " + request.productionId() + " not found"));
             item.setProduction(production);
         }
         item.setNotes(request.notes());
