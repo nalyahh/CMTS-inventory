@@ -7,6 +7,7 @@ import com.CMTS.inventory.exception.ResourceNotFoundException;
 import com.CMTS.inventory.repository.ProductionRepository;
 import com.CMTS.inventory.repository.UserRepository;
 import com.CMTS.inventory.service.UserService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,10 +17,12 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final ProductionRepository productionRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, ProductionRepository productionRepository) {
+    public UserServiceImpl(UserRepository userRepository, ProductionRepository productionRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.productionRepository = productionRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<User> getAllUsers() {
@@ -39,8 +42,7 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setName(request.name());
         user.setEmail(request.email());
-        user.setPassword(request.password());
-        user.setRole(request.role());
+        user.setPassword(passwordEncoder.encode(request.password()));        user.setRole(request.role());
         if (request.productionIds() != null && !request.productionIds().isEmpty()) {
             for (Long productionId : request.productionIds()) {
                 Production production = productionRepository.findById(productionId)

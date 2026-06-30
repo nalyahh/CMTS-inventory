@@ -76,4 +76,8 @@ public class CheckoutServiceImpl implements CheckoutService {
         return checkoutRepository.save(checkout);
     }
 
+    @Override
+    public List<Checkout> getAllActiveCheckouts() {
+        return checkoutRepository.findByReturnedAtIsNull();
+    }
 }

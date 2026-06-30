@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/checkouts")
 public class CheckoutController {
@@ -37,5 +39,14 @@ public class CheckoutController {
         Checkout checkout = checkoutService.checkInItem(itemId);
         CheckoutDto checkoutDto = checkoutMapper.toDto(checkout);
         return ResponseEntity.ok(checkoutDto);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CheckoutDto>> getAllActiveCheckouts() {
+        List<Checkout> checkouts = checkoutService.getAllActiveCheckouts();
+        List<CheckoutDto> checkoutDtos = checkouts.stream()
+                .map(checkoutMapper::toDto)
+                .toList();
+        return ResponseEntity.ok(checkoutDtos);
     }
 }

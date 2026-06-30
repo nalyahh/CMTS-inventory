@@ -24,7 +24,8 @@ public class ProductionMapperImpl implements ProductionMapper {
                 production.getId(),
                 production.getName(),
                 production.getStartDate(),
-                production.getEndDate()
+                production.getEndDate(),
+                production.isArchived()
         );
     }
 }

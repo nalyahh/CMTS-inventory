@@ -6,5 +6,6 @@ public record ProductionDto(
         Long id,
         String name,
         LocalDate startDate,
-        LocalDate endDate) {
+        LocalDate endDate,
+        boolean archived) {
 }
