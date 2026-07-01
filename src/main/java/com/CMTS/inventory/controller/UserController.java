@@ -2,8 +2,11 @@ package com.CMTS.inventory.controller;
 
 import com.CMTS.inventory.domain.CreateUserRequest;
 import com.CMTS.inventory.domain.dto.CreateUserRequestDto;
+import com.CMTS.inventory.domain.dto.ProductionDto;
 import com.CMTS.inventory.domain.dto.UserDto;
+import com.CMTS.inventory.domain.entity.Production;
 import com.CMTS.inventory.domain.entity.User;
+import com.CMTS.inventory.mapper.ProductionMapper;
 import com.CMTS.inventory.mapper.UserMapper;
 import com.CMTS.inventory.service.UserService;
 import jakarta.validation.Valid;
@@ -19,11 +22,13 @@ public class UserController {
 
     private final UserService userService;
     private final UserMapper userMapper;
+    private final ProductionMapper productionMapper;
 
 
-    public UserController(UserService userService, UserMapper userMapper) {
+    public UserController(UserService userService, UserMapper userMapper, ProductionMapper productionMapper) {
         this.userService = userService;
         this.userMapper = userMapper;
+        this.productionMapper = productionMapper;
     }
 
     @GetMapping
@@ -48,6 +53,15 @@ public class UserController {
         User user = userService.getUserById(id);
         UserDto userDto = userMapper.toDto(user);
         return ResponseEntity.ok(userDto);
+    }
+
+    @GetMapping("/{id}/productions")
+    public ResponseEntity<List<ProductionDto>> getAllProductions(@PathVariable Long id) {
+        List<Production> productions = userService.getAllProductions(id);
+        List<ProductionDto> productionDtos = productions.stream()
+                .map(productionMapper::toDto)
+                .toList();
+        return ResponseEntity.ok(productionDtos);
     }
 
     @DeleteMapping("/{id}")

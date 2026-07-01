@@ -3,8 +3,11 @@ package com.CMTS.inventory.controller;
 import com.CMTS.inventory.domain.CreateProductionRequest;
 import com.CMTS.inventory.domain.dto.CreateProductionRequestDto;
 import com.CMTS.inventory.domain.dto.ProductionDto;
+import com.CMTS.inventory.domain.dto.UserDto;
 import com.CMTS.inventory.domain.entity.Production;
+import com.CMTS.inventory.domain.entity.User;
 import com.CMTS.inventory.mapper.ProductionMapper;
+import com.CMTS.inventory.mapper.UserMapper;
 import com.CMTS.inventory.service.ProductionService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -19,11 +22,13 @@ public class ProductionController {
 
     private final ProductionService productionService;
     private final ProductionMapper productionMapper;
+    private final UserMapper userMapper;
 
 
-    public ProductionController(ProductionService productionService, ProductionMapper productionMapper) {
+    public ProductionController(ProductionService productionService, ProductionMapper productionMapper, UserMapper userMapper) {
         this.productionService = productionService;
         this.productionMapper = productionMapper;
+        this.userMapper = userMapper;
     }
 
     @GetMapping
@@ -61,6 +66,15 @@ public class ProductionController {
         Production production = productionService.archiveProduction(id);
         ProductionDto productionDto = productionMapper.toDto(production);
         return ResponseEntity.ok(productionDto);
+    }
+
+    @GetMapping("/{id}/users")
+    public ResponseEntity<List<UserDto>> getAllUsers(@PathVariable Long id) {
+        List<User> users = productionService.getAllUsers(id);
+        List<UserDto> userDtos = users.stream()
+                .map(userMapper::toDto)
+                .toList();
+        return ResponseEntity.ok(userDtos);
     }
 
     @DeleteMapping("/{id}")

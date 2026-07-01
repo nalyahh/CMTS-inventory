@@ -3,10 +3,12 @@ package com.CMTS.inventory.service.impl;
 import com.CMTS.inventory.domain.CreateProductionRequest;
 import com.CMTS.inventory.domain.entity.Checkout;
 import com.CMTS.inventory.domain.entity.Production;
+import com.CMTS.inventory.domain.entity.User;
 import com.CMTS.inventory.exception.ProductionNotArchivableException;
 import com.CMTS.inventory.exception.ResourceNotFoundException;
 import com.CMTS.inventory.repository.CheckoutRepository;
 import com.CMTS.inventory.repository.ProductionRepository;
+import com.CMTS.inventory.repository.UserRepository;
 import com.CMTS.inventory.service.ProductionService;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +19,12 @@ public class ProductionServiceImpl implements ProductionService {
 
     private final ProductionRepository productionRepository;
     private final CheckoutRepository checkoutRepository;
+    private final UserRepository userRepository;
 
-    public ProductionServiceImpl(ProductionRepository productionRepository, CheckoutRepository checkoutRepository) {
+    public ProductionServiceImpl(ProductionRepository productionRepository, CheckoutRepository checkoutRepository, UserRepository userRepository) {
         this.productionRepository = productionRepository;
         this.checkoutRepository = checkoutRepository;
+        this.userRepository = userRepository;
     }
 
     public List<Production> getAllProductions() {
@@ -34,6 +38,13 @@ public class ProductionServiceImpl implements ProductionService {
     public Production getProductionByName(String name) {
         return productionRepository.findByName(name)
                 .orElseThrow(() -> new ResourceNotFoundException("Production with name " + name + " not found"));    }
+
+    @Override
+    public List<User> getAllUsers(Long id) {
+        Production production = productionRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Production with ID " + id + " not found"));
+        return userRepository.findByProductions(production);
+    }
 
     public Production createProduction(CreateProductionRequest request) {
         Production production = new Production();

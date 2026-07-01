@@ -38,6 +38,13 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User with email " + email + " not found"));    }
 
     @Override
+    public List<Production> getAllProductions(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User with ID " + id + " not found"));
+        return user.getProductions().stream().toList();
+    }
+
+    @Override
     public User createUser(CreateUserRequest request) {
         User user = new User();
         user.setName(request.name());
