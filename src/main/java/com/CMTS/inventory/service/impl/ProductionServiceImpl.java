@@ -58,6 +58,14 @@ public class ProductionServiceImpl implements ProductionService {
     }
 
     public void deleteProduction(Long id) {
+        Production production = productionRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Production with ID " + id + " not found"));
+
+        List<Checkout> activeCheckouts = checkoutRepository.findByProductionAndReturnedAtIsNull(production);
+
+        if (!activeCheckouts.isEmpty())
+            throw new ProductionNotArchivableException("Production " + production.getName() + " has active checkouts and cannot be deleted");
+
         productionRepository.deleteById(id);
     }
 }
