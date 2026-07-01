@@ -1,5 +1,6 @@
 package com.CMTS.inventory.domain.dto;
 
-public class AuthResponse {
-    
+public record AuthResponseDto(
+        String token,
+        long expiresIn) {
 }

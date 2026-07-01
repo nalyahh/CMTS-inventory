@@ -3,7 +3,7 @@ package com.CMTS.inventory.domain.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-public record LoginRequest(
+public record LoginRequestDto(
         @NotBlank(message = "Email is required")
         @Email(message = "Must be a valid email")
         String email,
