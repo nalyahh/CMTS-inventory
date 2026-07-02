@@ -21,7 +21,7 @@ A props and equipment inventory management system for Columbia Musical Theatre S
 ### Auth
 | Method | Path | Description |
 |--------|------|-------------|
-| POST | `/api/v1/auth/login` | Login and receive JWT token |
+| POST | `/api/v1/auth` | Login and receive JWT token |
 
 ### Items
 | Method | Path | Description |
@@ -38,15 +38,17 @@ A props and equipment inventory management system for Columbia Musical Theatre S
 | GET | `/api/v1/productions` | Get all productions |
 | GET | `/api/v1/productions/{id}` | Get production by ID |
 | GET | `/api/v1/productions/name/{name}` | Get production by name |
+| GET | `/api/v1/productions/{id}/users` | Get all users in a production |
 | POST | `/api/v1/productions` | Create production (Admin only) |
 | PATCH | `/api/v1/productions/{id}/archive` | Archive production (Admin only) |
-| DELETE | `/api/v1/productions/{id}` | Delete production (Admin only) |
+| DELETE | `/api/v1/productions/{id}` | Delete production (Admin only, blocked if active checkouts exist) |
 
 ### Users
 | Method | Path | Description |
 |--------|------|-------------|
 | GET | `/api/v1/users` | Get all users (Admin only) |
 | GET | `/api/v1/users/{id}` | Get user by ID |
+| GET | `/api/v1/users/{id}/productions` | Get all productions a user belongs to |
 | POST | `/api/v1/users` | Register a new user |
 | DELETE | `/api/v1/users/{id}` | Delete user (Admin only) |
 
@@ -59,32 +61,40 @@ A props and equipment inventory management system for Columbia Musical Theatre S
 
 ## Running Locally
 
-**Prerequisites:** Java 21, Maven, PostgreSQL
+**Prerequisites:** Java 21, Maven, PostgreSQL, Node.js
 
 1. Create a PostgreSQL database called `cmts_props`
 2. Update `src/main/resources/application.properties` with your DB credentials and a JWT secret
-3. Run the app:
+3. Run the backend:
 ```bash
 ./mvnw spring-boot:run
+```
+4. Run the frontend:
+```bash
+cd frontend
+npm install
+npm run dev
 ```
 
 ## Roadmap
 
-### Backend (in progress)
+### Backend
 - [x] Entity/repository/service/controller layers for all four domains
 - [x] Many-to-many user-production relationships
 - [x] Production archiving with active checkout validation
+- [x] Block production deletion if active checkouts exist
 - [x] Global exception handling with typed error responses
 - [x] DTO validation across all endpoints
 - [x] Password hashing with BCrypt
-- [ ] JWT authentication and role-based access control
-- [ ] Block production deletion if active checkouts exist
-- [ ] Endpoints for getting a user's productions and a production's users
+- [x] JWT authentication and role-based access control
+- [x] Endpoints for getting a user's productions and a production's users
+- [x] Available quantity calculated per item (total minus active checkouts)
 
-### Frontend (React — not started)
-- [ ] Project setup (Vite + React)
+### Frontend (React — in progress)
+- [x] Project setup (Vite + React + axios + react-router-dom)
+- [ ] Item Catalog page with category filters and search
 - [ ] Login page
-- [ ] Items list with availability status
+- [ ] My Checkouts page
 - [ ] Checkout flow for crew
 - [ ] Admin dashboard — manage items, productions, users
 - [ ] Archive production UI
