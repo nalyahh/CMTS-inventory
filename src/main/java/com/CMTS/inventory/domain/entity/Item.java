@@ -16,7 +16,7 @@ public class Item {
     private String name;
 
     public enum Categories {
-        LIGHTS, SOUND, COSTUMES, PROPS, HAIR_MAKEUP
+        LIGHTS, SOUND, COSTUMES, PROPS, HAIR_MAKEUP, SET, INSTRUMENTS
     }
 
     @Enumerated(EnumType.STRING)

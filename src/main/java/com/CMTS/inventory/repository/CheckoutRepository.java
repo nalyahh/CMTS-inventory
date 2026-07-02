@@ -18,6 +18,8 @@ public interface CheckoutRepository extends JpaRepository<Checkout, Long> {
 
     List<Checkout> findByItemAndReturnedAtIsNull(Item item);
 
+    int countByItemAndReturnedAtIsNull(Item item);
+
     List<Checkout> findByProduction(Production production);
 
     List<Checkout> findByProductionAndReturnedAtIsNull(Production production);

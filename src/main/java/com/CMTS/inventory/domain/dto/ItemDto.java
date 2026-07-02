@@ -9,6 +9,7 @@ public record ItemDto(
         Item.Categories category,
         Item.Status status,
         int quantity,
+        int availableQuantity,
         String notes,
         String photoURL,
         Long productionId) {
