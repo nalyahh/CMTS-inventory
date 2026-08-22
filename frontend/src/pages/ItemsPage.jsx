@@ -41,11 +41,23 @@ function quantityClass(available, total) {
 
 function ItemsPage() {
     const [items, setItems] = useState([])
+    const [user, setUser] = useState(null)
     const[searchQuery, setSearchQuery] = useState('')
     const[selectedCategory, setSelectedCategory] = useState('ALL')
 
     useEffect(() =>  {
         axios.get('http://localhost:8080/api/v1/items').then(response => setItems(response.data)).catch(error => console.error('Failed to load items:', error))}, [])
+
+    useEffect(() => {
+        const token = localStorage.getItem('token')
+        if (!token) return
+
+        axios.get('http://localhost:8080/api/v1/users/me', {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+            .then(response => setUser(response.data))
+            .catch(() => localStorage.removeItem('token'))
+    }, [])
 
     const visibleItems = items.filter(item => {
         const matchesCategory = selectedCategory === 'ALL' || item.category === selectedCategory
@@ -72,8 +84,14 @@ function ItemsPage() {
                     <a href="/admin">Admin</a>
                 </div>
                 <div className="navbar-user">
-                    Hi, Nalyah
-                    <span className="avatar">N</span>
+                    {user ? (
+                        <div className="navbar-user">
+                            Hi, {user.name.split(' ')[0]}
+                            <span className="avatar">{user.name.charAt(0)}</span>
+                        </div>
+                    ) : (
+                        <a className="navbar-signin" href="/login">Sign In</a>
+                    )}
                 </div>
             </nav>
             <main className="catalog">
