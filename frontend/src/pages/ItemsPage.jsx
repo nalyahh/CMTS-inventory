@@ -12,6 +12,17 @@ const CATEGORY_LABELS = {
     INSTRUMENTS: 'Instruments',
 }
 
+const CATEGORIES = [
+    { value: 'ALL', label: 'All' },
+    { value: 'SET', label: 'Set' },
+    { value: 'PROPS', label: 'Props' },
+    { value: 'SOUND', label: 'Sound' },
+    { value: 'LIGHTS', label: 'Lights' },
+    { value: 'COSTUMES', label: 'Costumes' },
+    { value: 'HAIR_MAKEUP', label: 'Hair and Makeup' },
+    { value: 'INSTRUMENTS', label: 'Instruments' },
+]
+
 function quantityClass(available, total) {
     if (available === 0) return 'quantity-badge qty-red'
     if (available < total) return 'quantity-badge qty-yellow'
@@ -21,11 +32,16 @@ function quantityClass(available, total) {
 function ItemsPage() {
     const [items, setItems] = useState([])
     const[searchQuery, setSearchQuery] = useState('')
+    const[selectedCategory, setSelectedCategory] = useState('ALL')
 
     useEffect(() =>  {
         axios.get('http://localhost:8080/api/v1/items').then(response => setItems(response.data)).catch(error => console.error('Failed to load items:', error))}, [])
 
-    const visibleItems = items.filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    const visibleItems = items.filter(item => {
+        const matchesCategory = selectedCategory === 'ALL' || item.category === selectedCategory
+        const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase())
+        return matchesCategory && matchesSearch
+    })
     return (
         <div className="items-page">
             <nav className="navbar">
@@ -51,6 +67,18 @@ function ItemsPage() {
                         value={searchQuery}
                         onChange={e => setSearchQuery(e.target.value)}
                     />
+                </div>
+
+                <div className="category-pills">
+                    {CATEGORIES.map(category => <button
+                        key={category.value}
+                        className={selectedCategory === category.value ? 'pill active' : 'pill'}
+                        onClick={() => setSelectedCategory(category.value)}
+                        >
+                            {category.label}
+                        </button>
+                        )}
+
                 </div>
                 <div className="item-grid">
                     {visibleItems.map(item => (

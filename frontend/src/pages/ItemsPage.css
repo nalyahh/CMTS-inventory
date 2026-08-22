@@ -1,6 +1,7 @@
 .items-page {
     min-height: 100vh;
     background: #F3EFE6;
+    font-family: 'Roboto', sans-serif;
 }
 
 .navbar {
@@ -60,6 +61,27 @@
     border-radius: 38px;
     font-size: 14px;
     background: white;
+}
+
+.category-pills {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+}
+
+.pill {
+    padding: 6px 20px;
+    border: 1px solid #F2D79D;
+    border-radius: 38px;
+    background: white;
+    color: #113478;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.pill.active {
+    background: #BFE3F5;
 }
 
 .item-grid {
