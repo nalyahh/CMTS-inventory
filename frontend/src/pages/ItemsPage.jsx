@@ -1,6 +1,7 @@
 import './ItemsPage.css'
 import {useState, useEffect} from "react";
 import axios from "axios";
+import cmtsLogo from '../assets/cmts-logo.png'
 
 const CATEGORY_LABELS = {
     SOUND: 'Sound',
@@ -23,6 +24,15 @@ const CATEGORIES = [
     { value: 'INSTRUMENTS', label: 'Instruments' },
 ]
 
+const CATEGORY_STYLES = {
+    SOUND: { background: '#E1F2FD', color: '#6DB2F3' },
+    LIGHTS: { background: '#FDF7E1', color: '#F2CD56' },
+    PROPS: { background: '#E8FDE1', color: '#97EA92' },
+    COSTUMES: { background: '#E7E1FD', color: '#8E6DF3' },
+    SET: { background: '#FDE1E1', color: '#F3786D' },
+    HAIR_MAKEUP: { background: '#FDE1FF', color: '#EA98F2' },
+    INSTRUMENTS: { background: '#E1FDF7', color: '#6DF3EC' },
+}
 function quantityClass(available, total) {
     if (available === 0) return 'quantity-badge qty-red'
     if (available < total) return 'quantity-badge qty-yellow'
@@ -45,6 +55,12 @@ function ItemsPage() {
     return (
         <div className="items-page">
             <nav className="navbar">
+                <div className="navbar-lights">
+                    {Array.from({ length: 40 }).map((_, i) => (
+                        <span key={i} className="light" />
+                    ))}
+                </div>
+                <img src={cmtsLogo} alt="CMTS logo" className="navbar-logo" />
                 <div className="navbar-title">
                     Columbia Musical Theatre Society
                     <br />
@@ -55,7 +71,10 @@ function ItemsPage() {
                     <a href="/checkouts">My Checkouts</a>
                     <a href="/admin">Admin</a>
                 </div>
-                <div className="navbar-user">Hi, Nalyah</div>
+                <div className="navbar-user">
+                    Hi, Nalyah
+                    <span className="avatar">N</span>
+                </div>
             </nav>
             <main className="catalog">
                 <div className="catalog-header">
@@ -84,7 +103,9 @@ function ItemsPage() {
                     {visibleItems.map(item => (
                         <div className="item-card" key={item.id}>
                             <div className="item-photo">
-                                <span className="item-badge category-badge">{CATEGORY_LABELS[item.category]}</span>
+                                <span className="item-badge category-badge" style={CATEGORY_STYLES[item.category]}>
+                                    {CATEGORY_LABELS[item.category]}
+                                </span>
                                 <span className={`item-badge ${quantityClass(item.availableQuantity, item.quantity)}`}>{item.availableQuantity} of {item.quantity}</span>
                             </div>
                             <div className="item-body">
