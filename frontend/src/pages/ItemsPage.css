@@ -1,0 +1,166 @@
+.items-page {
+    min-height: 100vh;
+    background: #F3EFE6;
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    gap: 48px;
+    background: #BFE3F5;
+    padding: 24px 40px;
+}
+
+.navbar-title {
+    font-weight: bold;
+    font-size: 20px;
+    color: #113478;
+}
+
+.navbar-links {
+    display: flex;
+    gap: 56px;
+    flex: 1;
+    justify-content: center;
+}
+
+.navbar-links a {
+    font-weight: bold;
+    font-size: 20px;
+    color: #113478;
+    text-decoration: none;
+}
+
+.navbar-user {
+    font-size: 20px;
+    color: #113478;
+}
+
+.catalog {
+    padding: 24px 56px;
+}
+
+.catalog-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.catalog-header h1 {
+    color: #113478;
+    font-size: 40px;
+    margin: 0;
+}
+
+.search-bar {
+    width: 340px;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 38px;
+    font-size: 14px;
+    background: white;
+}
+
+.item-grid {
+    gap: 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(259px, 1fr));
+}
+
+.item-card {
+    background: white;
+    border-radius: 24px;
+    box-shadow: 3px 3px 7px rgba(0, 0, 0, .25);
+    overflow: hidden;
+}
+
+.item-photo {
+    position: relative;
+    height: 151px;
+    background: #E0E0E0;
+}
+
+.item-badge {
+    position: absolute;
+    top: 8px;
+    padding: 4px 12px;
+    border-radius: 22px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.category-badge {
+    left: 8px;
+    background: #E1F2FD;
+    color: #6DB2F3;
+}
+
+.quantity-badge {
+    right: 8px;
+}
+
+.qty-green {
+    background: #D1FDC1;
+    color: #359644;
+}
+
+.qty-yellow {
+    background: #FDF6C1;
+    color: #967135;
+}
+
+.qty-red {
+    background: #FDC1C1;
+    color: #DE5C5C;
+}
+
+.item-body {
+    padding: 8px 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.item-name {
+    color: #113478;
+    font-size: 24px;
+    margin: 0;
+}
+
+.item-location {
+    color: #6DB2F3;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.item-notes {
+    background: #FBF3D8;
+    color: #A88334;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 6px;
+    align-self: flex-start;
+}
+
+.checkout-btn {
+    padding: 6px;
+    border: none;
+    border-radius: 9px;
+    background: #113478;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.checkout-btn.sold-out {
+    background: #DE5C5C;
+    color: #890000;
+    cursor: default;
+}
+
+
