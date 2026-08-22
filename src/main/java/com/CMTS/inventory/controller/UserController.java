@@ -12,6 +12,7 @@ import com.CMTS.inventory.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -70,4 +71,11 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<UserDto> getCurrentUser (Authentication authentication) {
+        String email = authentication.getName();
+        User user = userService.getUserByEmail(email);
+        UserDto userDto = userMapper.toDto(user);
+        return ResponseEntity.ok(userDto);
+    }
 }
