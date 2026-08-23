@@ -45,6 +45,10 @@ function ItemsPage() {
     const[searchQuery, setSearchQuery] = useState('')
     const[selectedCategory, setSelectedCategory] = useState('ALL')
 
+    function handleLogout() {
+        localStorage.removeItem('token')
+        setUser(null)
+    }
     useEffect(() =>  {
         axios.get('http://localhost:8080/api/v1/items').then(response => setItems(response.data)).catch(error => console.error('Failed to load items:', error))}, [])
 
@@ -88,6 +92,7 @@ function ItemsPage() {
                         <div className="navbar-user">
                             Hi, {user.name.split(' ')[0]}
                             <span className="avatar">{user.name.charAt(0)}</span>
+                            <button className="logout-btn" onClick={handleLogout}>Log out</button>
                         </div>
                     ) : (
                         <a className="navbar-signin" href="/login">Sign In</a>

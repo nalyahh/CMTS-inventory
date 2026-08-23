@@ -77,6 +77,15 @@
     text-decoration: underline;
 }
 
+.logout-btn {
+    border: none;
+    background: none;
+    color: #113478;
+    font-size: 14px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 .avatar {
     width: 44px;
     height: 44px;
