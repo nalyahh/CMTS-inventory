@@ -246,4 +246,65 @@
     cursor: default;
 }
 
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal {
+    background: white;
+    border-radius: 24px;
+    padding: 32px;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.modal h2 {
+    color: #113478;
+    margin: 0;
+}
+
+.modal-productions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.production-option {
+    padding: 10px;
+    border: 1px solid #F2D79D;
+    border-radius: 9px;
+    background: white;
+    color: #113478;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.production-option:hover {
+    background: #BFE3F5;
+}
+
+.modal-cancel {
+    border: none;
+    background: none;
+    color: #888;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.production-input {
+    padding: 10px 16px;
+    border: 1px solid #F2D79D;
+    border-radius: 9px;
+    font-size: 16px;
+    font-family: 'Roboto', sans-serif;
+}
 
