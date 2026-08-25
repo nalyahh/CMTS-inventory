@@ -47,15 +47,17 @@ public class CheckoutServiceImpl implements CheckoutService {
         Item item = itemRepository.findById(request.itemId())
                 .orElseThrow(() -> new ResourceNotFoundException("Item with ID " + request.itemId() + " not found"));
 
-        if (item.getStatus() != Item.Status.AVAILABLE)
-            throw new ItemNotAvailableException("Item with ID " + request.itemId() + " is not available");
+        int activeCheckouts = checkoutRepository.countByItemAndReturnedAtIsNull(item);
+        if (activeCheckouts >= item.getQuantity())
+            throw new ItemNotAvailableException("All " + item.getQuantity() + " of " + item.getName() + " are already checked out");
 
         Checkout checkout = new Checkout();
         checkout.setItem(item);
         checkout.setUser(user);
         checkout.setProduction(production);
-        checkout.setDueDate(production.getEndDate().plusDays(CHECKOUT_BUFFER_DAYS));        checkout.setCheckedOutAt(LocalDateTime.now());
-        item.setStatus(Item.Status.CHECKED_OUT);
+        checkout.setDueDate(production.getEndDate().plusDays(CHECKOUT_BUFFER_DAYS));
+        checkout.setCheckedOutAt(LocalDateTime.now());
+        item.setStatus(activeCheckouts + 1 >= item.getQuantity() ? Item.Status.CHECKED_OUT : Item.Status.AVAILABLE);
 
         itemRepository.save(item);
         return checkoutRepository.save(checkout);

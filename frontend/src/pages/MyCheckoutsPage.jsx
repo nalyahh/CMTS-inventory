@@ -10,6 +10,14 @@ function formatDate(dateString) {
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
+function isOverdue(dateString) {
+    const [year, month, day] = dateString.split('-')
+    const due = new Date(year, month - 1, day)
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    return due < today
+}
+
 function MyCheckoutsPage() {
     const [checkouts, setCheckouts] = useState([])
     const [user, setUser] = useState(null)
@@ -70,8 +78,9 @@ function MyCheckoutsPage() {
                                 <div className="checkout-info">
                                     <h3 className="checkout-item">{checkout.itemName}</h3>
                                     <div className="checkout-production">{checkout.productionName}</div>
-                                    <div className="checkout-due">Due {formatDate(checkout.dueDate)}</div>
-                                </div>
+                                    <div className={isOverdue(checkout.dueDate) ? 'checkout-due overdue' : 'checkout-due'}>
+                                        Due {formatDate(checkout.dueDate)}
+                                    </div>                                </div>
                                 <button className="checkin-btn" onClick={() => handleCheckIn(checkout.itemId)}>
                                     Check In
                                 </button>

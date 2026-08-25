@@ -70,3 +70,8 @@
 .checkin-btn:hover {
     background: #1a4699;
 }
+
+.checkout-due.overdue {
+    color: #DE5C5C;
+    font-weight: bold;
+}
