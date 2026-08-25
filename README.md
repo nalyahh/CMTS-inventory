@@ -6,7 +6,7 @@ A props and equipment inventory management system for Columbia Musical Theatre S
 
 - **Backend:** Java 21, Spring Boot 3, Spring Security, Spring Data JPA
 - **Database:** PostgreSQL
-- **Frontend:** React *(in progress)*
+- **Frontend:** React (Vite), React Router, axios
 - **Auth:** JWT
 
 ## Domain
@@ -47,6 +47,7 @@ A props and equipment inventory management system for Columbia Musical Theatre S
 | Method | Path | Description |
 |--------|------|-------------|
 | GET | `/api/v1/users` | Get all users (Admin only) |
+| GET | `/api/v1/users/me` | Get the currently logged-in user |
 | GET | `/api/v1/users/{id}` | Get user by ID |
 | GET | `/api/v1/users/{id}/productions` | Get all productions a user belongs to |
 | POST | `/api/v1/users` | Register a new user |
@@ -56,6 +57,7 @@ A props and equipment inventory management system for Columbia Musical Theatre S
 | Method | Path | Description |
 |--------|------|-------------|
 | GET | `/api/v1/checkouts` | Get all active checkouts |
+| GET | `/api/v1/checkouts/me` | Get the logged-in user's active checkouts |
 | POST | `/api/v1/checkouts` | Check out an item |
 | PUT | `/api/v1/checkouts/items/{itemId}/checkin` | Check in an item |
 
@@ -89,18 +91,31 @@ npm run dev
 - [x] JWT authentication and role-based access control
 - [x] Endpoints for getting a user's productions and a production's users
 - [x] Available quantity calculated per item (total minus active checkouts)
+- [x] Checkouts allowed up to an item's full quantity
+- [x] `/users/me` and `/checkouts/me` endpoints driven by the auth token
 
 ### Frontend (React — in progress)
 - [x] Project setup (Vite + React + axios + react-router-dom)
-- [ ] Item Catalog page with category filters and search
-- [ ] Login page
-- [ ] My Checkouts page
-- [ ] Checkout flow for crew
+- [x] Item Catalog page with category filters and search
+- [x] Login page with JWT authentication
+- [x] My Checkouts page with check-in and overdue highlighting
+- [x] Checkout flow for crew (production picker, live availability)
+- [x] Shared `Navbar` component; Admin link hidden from non-admins
+- [x] Shared axios client that attaches the auth token automatically
+- [x] User-facing error messages when requests fail
 - [ ] Admin dashboard — manage items, productions, users
+- [ ] Item photos
 - [ ] Archive production UI
+- [ ] Sign in with Google
+
+### Known Issues / Tech Debt
+- Duplicate emails on registration return a generic 500; deserves its own 409 handler
+- `Item.status` duplicates information derivable from quantity vs. active checkouts
+- Adding a value to an entity enum needs a manual `ALTER TABLE ... CHECK` in Postgres, since `ddl-auto=update` will not rewrite an existing constraint
 
 ### Deployment
 - [ ] Move JWT secret to environment variable
+- [ ] Point the frontend's API base URL at the deployed backend (`frontend/src/api.js`)
 - [ ] Deploy backend to AWS Elastic Beanstalk
 - [ ] Deploy PostgreSQL to AWS RDS
 - [ ] Deploy frontend (Vercel or S3 + CloudFront)
