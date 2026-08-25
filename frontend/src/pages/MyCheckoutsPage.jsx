@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import axios from "axios";
+import api from '../api'
 import Navbar from '../components/Navbar'
 import './MyCheckoutsPage.css'
 
@@ -23,12 +23,9 @@ function MyCheckoutsPage() {
     const [user, setUser] = useState(null)
 
     function loadCheckouts() {
-        const token = localStorage.getItem('token')
-        if (!token) return
+        if (!localStorage.getItem('token')) return
 
-        axios.get('http://localhost:8080/api/v1/checkouts/me', {
-            headers: { Authorization: `Bearer ${token}` }
-        })
+        api.get('/checkouts/me')
             .then(response => setCheckouts(response.data))
             .catch(error => console.error('Failed to load checkouts:', error))
     }
@@ -38,10 +35,7 @@ function MyCheckoutsPage() {
     }, [])
 
     function handleCheckIn(itemId) {
-        const token = localStorage.getItem('token')
-        axios.put(`http://localhost:8080/api/v1/checkouts/items/${itemId}/checkin`, null, {
-            headers: { Authorization: `Bearer ${token}` }
-        })
+        api.put(`/checkouts/items/${itemId}/checkin`)
             .then(() => loadCheckouts())
             .catch(error => console.error('Check in failed:', error))
     }
@@ -53,12 +47,9 @@ function MyCheckoutsPage() {
 
 
     useEffect(() => {
-        const token = localStorage.getItem('token')
-        if (!token) return
+        if (!localStorage.getItem('token')) return
 
-        axios.get('http://localhost:8080/api/v1/users/me', {
-            headers: { Authorization: `Bearer ${token}` }
-        })
+        api.get('/users/me')
             .then(response => setUser(response.data))
             .catch(() => localStorage.removeItem('token'))
     }, [])

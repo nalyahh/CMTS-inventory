@@ -1,6 +1,6 @@
 import './ItemsPage.css'
 import {useState, useEffect} from "react";
-import axios from "axios";
+import api from '../api'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 
@@ -54,39 +54,36 @@ function ItemsPage() {
         localStorage.removeItem('token')
         setUser(null)
     }
+
     function closeModal() {
         setCheckoutItem(null)
         setProductionSearch('')
     }
+
     function handleCheckout(productionId) {
-        const token = localStorage.getItem('token')
-        axios.post('http://localhost:8080/api/v1/checkouts',
-            {
-                itemId: checkoutItem.id,
-                userId: user.id,
-                productionId: productionId
-            },
-            {
-                headers: { Authorization: `Bearer ${token}` }
-            }
-        )
+        api.post('/checkouts', {
+            itemId: checkoutItem.id,
+            userId: user.id,
+            productionId: productionId
+        })
             .then(() => {
                 closeModal()
-                return axios.get('http://localhost:8080/api/v1/items')
+                return api.get('/items')
             })
             .then(response => setItems(response.data))
             .catch(error => console.error('Checkout failed:', error))
     }
-    useEffect(() =>  {
-        axios.get('http://localhost:8080/api/v1/items').then(response => setItems(response.data)).catch(error => console.error('Failed to load items:', error))}, [])
 
     useEffect(() => {
-        const token = localStorage.getItem('token')
-        if (!token) return
+        api.get('/items')
+            .then(response => setItems(response.data))
+            .catch(error => console.error('Failed to load items:', error))
+    }, [])
 
-        axios.get('http://localhost:8080/api/v1/users/me', {
-            headers: { Authorization: `Bearer ${token}` }
-        })
+    useEffect(() => {
+        if (!localStorage.getItem('token')) return
+
+        api.get('/users/me')
             .then(response => setUser(response.data))
             .catch(() => localStorage.removeItem('token'))
     }, [])
@@ -94,10 +91,7 @@ function ItemsPage() {
     useEffect(() => {
         if (!user || !checkoutItem) return
 
-        const token = localStorage.getItem('token')
-        axios.get(`http://localhost:8080/api/v1/users/${user.id}/productions`, {
-            headers: { Authorization: `Bearer ${token}` }
-        })
+        api.get(`/users/${user.id}/productions`)
             .then(response => setProductions(response.data))
             .catch(error => console.error('Failed to load productions:', error))
     }, [checkoutItem, user])

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import axios from 'axios'
+import api from '../api'
 import { useNavigate } from 'react-router-dom'
 import './LoginPage.css'
 
@@ -11,7 +11,7 @@ function LoginPage() {
 
     function handleSubmit(e) {
         e.preventDefault()
-        axios.post('http://localhost:8080/api/v1/auth', { email: email, password: password })
+        api.post('/auth', { email: email, password: password })
             .then(response => {
                 localStorage.setItem('token', response.data.token)
                 navigate('/')
