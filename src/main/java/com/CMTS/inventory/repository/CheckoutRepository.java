@@ -26,4 +26,6 @@ public interface CheckoutRepository extends JpaRepository<Checkout, Long> {
 
     List<Checkout> findByUserAndReturnedAtIsNull(User user);
 
+    long countByItem(Item item);
+
 }

@@ -91,21 +91,6 @@
     right: 8px;
 }
 
-.qty-green {
-    background: #D1FDC1;
-    color: #359644;
-}
-
-.qty-yellow {
-    background: #FDF6C1;
-    color: #967135;
-}
-
-.qty-red {
-    background: #FDC1C1;
-    color: #DE5C5C;
-}
-
 .item-body {
     padding: 8px 10px 12px;
     display: flex;

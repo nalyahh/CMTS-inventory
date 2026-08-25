@@ -1,10 +1,7 @@
 package com.CMTS.inventory.controller;
 
 import com.CMTS.inventory.domain.dto.ErrorDto;
-import com.CMTS.inventory.exception.ArchivedProductionException;
-import com.CMTS.inventory.exception.ItemNotAvailableException;
-import com.CMTS.inventory.exception.ResourceNotFoundException;
-import com.CMTS.inventory.exception.ProductionNotArchivableException;
+import com.CMTS.inventory.exception.*;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,6 +64,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDto> handleIllegalArgumentException(IllegalArgumentException ex) {
         ErrorDto errorDto = new ErrorDto(ex.getMessage());
         return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ItemNotDeletableException.class)
+    public ResponseEntity<ErrorDto> handleItemNotDeletableException(ItemNotDeletableException ex) {
+        ErrorDto errorDto = new ErrorDto(ex.getMessage());
+        return new ResponseEntity<>(errorDto, HttpStatus.CONFLICT);
     }
 
 }

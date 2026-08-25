@@ -17,4 +17,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     List<Item> findByProduction (Production production);
 
     List<Item> findByLocation (String location);
+
+    List<Item> findByArchivedFalse();
 }

@@ -4,42 +4,9 @@ import api, { API_BASE } from '../api'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import useCurrentUser from '../hooks/useCurrentUser'
-const CATEGORY_LABELS = {
-    SOUND: 'Sound',
-    LIGHTS: 'Lights',
-    PROPS: 'Props',
-    COSTUMES: 'Costumes',
-    SET: 'Set',
-    HAIR_MAKEUP: 'Hair and Makeup',
-    INSTRUMENTS: 'Instruments',
-}
+import { CATEGORIES, CATEGORY_LABELS, CATEGORY_STYLES, quantityStyle } from '../itemStyles'
 
-const CATEGORIES = [
-    { value: 'ALL', label: 'All' },
-    { value: 'SET', label: 'Set' },
-    { value: 'PROPS', label: 'Props' },
-    { value: 'SOUND', label: 'Sound' },
-    { value: 'LIGHTS', label: 'Lights' },
-    { value: 'COSTUMES', label: 'Costumes' },
-    { value: 'HAIR_MAKEUP', label: 'Hair and Makeup' },
-    { value: 'INSTRUMENTS', label: 'Instruments' },
-]
-
-const CATEGORY_STYLES = {
-    SOUND: { background: '#E1F2FD', color: '#6DB2F3' },
-    LIGHTS: { background: '#FDF7E1', color: '#C29A18' },
-    PROPS: { background: '#E8FDE1', color: '#4CA845' },
-    COSTUMES: { background: '#E7E1FD', color: '#8E6DF3' },
-    SET: { background: '#FDE1E1', color: '#F3786D' },
-    HAIR_MAKEUP: { background: '#FDE1FF', color: '#B455C0' },
-    INSTRUMENTS: { background: '#E1FDF7', color: '#3FB3A9' },
-}
-
-function quantityClass(available, total) {
-    if (available === 0) return 'quantity-badge qty-red'
-    if (available < total/2) return 'quantity-badge qty-yellow'
-    return 'quantity-badge qty-green'
-}
+const FILTER_PILLS = [{ value: 'ALL', label: 'All' }, ...CATEGORIES]
 
 function ItemsPage() {
     const [items, setItems] = useState([])
@@ -113,7 +80,7 @@ function ItemsPage() {
                 </div>
                 {error && <div className="error-banner">{error}</div>}
                 <div className="category-pills">
-                    {CATEGORIES.map(category => <button
+                    {FILTER_PILLS.map(category => <button
                         key={category.value}
                         className={selectedCategory === category.value ? 'pill active' : 'pill'}
                         onClick={() => setSelectedCategory(category.value)}
@@ -130,7 +97,7 @@ function ItemsPage() {
                             <span className="item-badge category-badge" style={CATEGORY_STYLES[item.category]}>
                                 {CATEGORY_LABELS[item.category]}
                                 </span>
-                                <span className={`item-badge ${quantityClass(item.availableQuantity, item.quantity)}`}>{item.availableQuantity} of {item.quantity}</span>
+                                <span className="item-badge quantity-badge" style={quantityStyle(item.availableQuantity, item.quantity)}>{item.availableQuantity} of {item.quantity}</span>
                             </div>
                             <div className="item-body">
                                 <h3 className="item-name">{item.name}</h3>

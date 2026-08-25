@@ -12,5 +12,6 @@ public record ItemDto(
         int availableQuantity,
         String notes,
         String photoURL,
-        Long productionId) {
+        Long productionId,
+        Boolean archived) {
 }

@@ -46,6 +46,8 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         Item item = itemRepository.findById(request.itemId())
                 .orElseThrow(() -> new ResourceNotFoundException("Item with ID " + request.itemId() + " not found"));
+        if (item.isArchived())
+            throw new ItemNotAvailableException(item.getName() + " has been retired and cannot be checked out");
 
         int activeCheckouts = checkoutRepository.countByItemAndReturnedAtIsNull(item);
         if (activeCheckouts >= item.getQuantity())

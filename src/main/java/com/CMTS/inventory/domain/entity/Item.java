@@ -34,6 +34,8 @@ public class Item {
 
     private String notes;
 
+    private boolean archived;
+
     @ManyToOne
     @JoinColumn(name = "production_id")
     private Production production;
@@ -107,5 +109,13 @@ public class Item {
     }
     public void setProduction(Production production) {
         this.production = production;
+    }
+
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
     }
 }

@@ -23,4 +23,8 @@ public interface ItemService {
     Item updateItem(Long id, UpdateItemRequest request);
 
     void deleteItem(Long id);
+
+    List<Item> getAllItemsIncludingArchived();
+
+    Item setArchived(Long id, boolean archived);
 }

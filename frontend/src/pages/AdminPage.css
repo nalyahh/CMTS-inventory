@@ -49,6 +49,15 @@
     border-top: 1px solid #EEE;
     color: #113478;
 }
+
+.table-pill {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 22px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
 .admin-form {
     display: flex;
     flex-wrap: wrap;
@@ -148,4 +157,38 @@
     object-fit: cover;
     border-radius: 9px;
     border: 1px solid #F2D79D;
+}
+
+.archived-row {
+    opacity: 0.5;
+}
+
+.row-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.row-btn {
+    padding: 6px 14px;
+    border: 1px solid #F2D79D;
+    border-radius: 9px;
+    background: white;
+    color: #113478;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.row-btn:hover {
+    background: #BFE3F5;
+}
+
+.row-btn.danger {
+    border-color: #DE5C5C;
+    color: #DE5C5C;
+}
+
+.row-btn.danger:hover {
+    background: #FDC1C1;
 }

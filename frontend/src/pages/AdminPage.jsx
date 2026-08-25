@@ -3,6 +3,7 @@ import useCurrentUser from '../hooks/useCurrentUser'
 import './AdminPage.css'
 import { useState, useEffect } from 'react'
 import api from '../api'
+import { CATEGORIES, CATEGORY_LABELS, CATEGORY_STYLES, quantityStyle } from '../itemStyles'
 
 const emptyForm = {
     name: '',
@@ -12,7 +13,6 @@ const emptyForm = {
     notes: '',
 }
 
-const CATEGORY_VALUES = ['SET', 'PROPS', 'SOUND', 'LIGHTS', 'COSTUMES', 'HAIR_MAKEUP', 'INSTRUMENTS']
 
 function resizeImage(file, maxWidth) {
     return new Promise((resolve, reject) => {
@@ -76,7 +76,7 @@ function AdminPage() {
     }
 
     function loadItems() {
-        api.get('/items')
+        api.get('/items?includeArchived=true')
             .then(response => {
                 setItems(response.data)
                 setError('')
@@ -99,6 +99,21 @@ function AdminPage() {
 
         return () => URL.revokeObjectURL(url)
     }, [photoFile])
+
+    function handleRetire(item) {
+        const action = item.archived ? 'unarchive' : 'archive'
+        api.patch(`/items/${item.id}/${action}`)
+            .then(() => loadItems())
+            .catch(error => setError(error.response?.data?.message || 'Could not update the item.'))
+    }
+
+    function handleDelete(item) {
+        if (!window.confirm(`Delete ${item.name}? This cannot be undone.`)) return
+
+        api.delete(`/items/${item.id}`)
+            .then(() => loadItems())
+            .catch(error => setError(error.response?.data?.message || 'Could not delete the item.'))
+    }
 
     return (
         <div className="admin-page">
@@ -152,8 +167,8 @@ function AdminPage() {
                                 )}
                             </div>
                             <select value={form.category} onChange={e => updateField('category', e.target.value)}>
-                                {CATEGORY_VALUES.map(value => (
-                                    <option key={value} value={value}>{value}</option>
+                                {CATEGORIES.map(category => (
+                                    <option key={category.value} value={category.value}>{category.label}</option>
                                 ))}
                             </select>
                             <input
@@ -189,18 +204,31 @@ function AdminPage() {
                                 <th>Name</th>
                                 <th>Category</th>
                                 <th>Location</th>
-                                <th>Quantity</th>
                                 <th>Available</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
                             {items.map(item => (
-                                <tr key={item.id}>
+                                <tr key={item.id} className={item.archived ? 'archived-row' : ''}>
                                     <td>{item.name}</td>
-                                    <td>{item.category}</td>
+                                    <td>
+                                    <span className="table-pill" style={CATEGORY_STYLES[item.category]}>
+                                        {CATEGORY_LABELS[item.category]}
+                                    </span>
+                                    </td>
                                     <td>{item.location}</td>
-                                    <td>{item.quantity}</td>
-                                    <td>{item.availableQuantity}</td>
+                                    <td>
+                                    <span className="table-pill" style={quantityStyle(item.availableQuantity, item.quantity)}>
+                                        {item.availableQuantity} of {item.quantity}
+                                    </span>
+                                    </td>
+                                    <td className="row-actions">
+                                        <button className="row-btn" onClick={() => handleRetire(item)}>
+                                            {item.archived ? 'Restore' : 'Retire'}
+                                        </button>
+                                        <button className="row-btn danger" onClick={() => handleDelete(item)}>Delete</button>
+                                    </td>
                                 </tr>
                             ))}
                             </tbody>

@@ -32,8 +32,10 @@ public class ItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ItemDto>> getAllItems() {
-        List<Item> items = itemService.getAllItems();
+    public ResponseEntity<List<ItemDto>> getAllItems(@RequestParam(defaultValue = "false") boolean includeArchived) {
+        List<Item> items = includeArchived
+                ? itemService.getAllItemsIncludingArchived()
+                : itemService.getAllItems();
         List<ItemDto> itemDtos = items.stream()
                 .map(itemMapper::toDto)
                 .toList();
@@ -82,6 +84,18 @@ public class ItemController {
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(photo.getContentType()))
                 .body(photo.getData());
+    }
+
+    @PatchMapping("/{id}/archive")
+    public ResponseEntity<ItemDto> archiveItem(@PathVariable Long id) {
+        Item item = itemService.setArchived(id, true);
+        return ResponseEntity.ok(itemMapper.toDto(item));
+    }
+
+    @PatchMapping("/{id}/unarchive")
+    public ResponseEntity<ItemDto> unarchiveItem(@PathVariable Long id) {
+        Item item = itemService.setArchived(id, false);
+        return ResponseEntity.ok(itemMapper.toDto(item));
     }
 
 }

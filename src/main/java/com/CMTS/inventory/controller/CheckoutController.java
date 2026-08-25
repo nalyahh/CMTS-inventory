@@ -4,9 +4,13 @@ package com.CMTS.inventory.controller;
 import com.CMTS.inventory.domain.CheckoutRequest;
 import com.CMTS.inventory.domain.dto.CheckoutDto;
 import com.CMTS.inventory.domain.dto.CheckoutRequestDto;
+import com.CMTS.inventory.domain.dto.ItemDto;
 import com.CMTS.inventory.domain.entity.Checkout;
+import com.CMTS.inventory.domain.entity.Item;
 import com.CMTS.inventory.mapper.CheckoutMapper;
+import com.CMTS.inventory.mapper.ItemMapper;
 import com.CMTS.inventory.service.CheckoutService;
+import com.CMTS.inventory.service.ItemService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +25,14 @@ public class CheckoutController {
 
     private final CheckoutService checkoutService;
     private final CheckoutMapper checkoutMapper;
+    private final ItemMapper itemMapper;
+    private final ItemService itemService;
 
-    public CheckoutController(CheckoutService checkoutService, CheckoutMapper checkoutMapper) {
+    public CheckoutController(CheckoutService checkoutService, CheckoutMapper checkoutMapper, ItemMapper itemMapper, ItemService itemService) {
         this.checkoutService = checkoutService;
         this.checkoutMapper = checkoutMapper;
+        this.itemMapper = itemMapper;
+        this.itemService = itemService;
     }
 
     @PostMapping

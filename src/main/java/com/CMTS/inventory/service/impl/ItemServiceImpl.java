@@ -5,7 +5,9 @@ import com.CMTS.inventory.domain.UpdateItemRequest;
 import com.CMTS.inventory.domain.entity.Item;
 import com.CMTS.inventory.domain.entity.ItemPhoto;
 import com.CMTS.inventory.domain.entity.Production;
+import com.CMTS.inventory.exception.ItemNotDeletableException;
 import com.CMTS.inventory.exception.ResourceNotFoundException;
+import com.CMTS.inventory.repository.CheckoutRepository;
 import com.CMTS.inventory.repository.ItemPhotoRepository;
 import com.CMTS.inventory.repository.ItemRepository;
 import com.CMTS.inventory.repository.ProductionRepository;
@@ -20,16 +22,18 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final ProductionRepository productionRepository;
     private final ItemPhotoRepository itemPhotoRepository;
+    private final CheckoutRepository checkoutRepository;
 
-
-    public ItemServiceImpl(ItemRepository itemRepository, ProductionRepository productionRepository, ItemPhotoRepository itemPhotoRepository) {
+    public ItemServiceImpl(ItemRepository itemRepository, ProductionRepository productionRepository,
+                           ItemPhotoRepository itemPhotoRepository, CheckoutRepository checkoutRepository) {
         this.itemRepository = itemRepository;
         this.productionRepository = productionRepository;
         this.itemPhotoRepository = itemPhotoRepository;
+        this.checkoutRepository = checkoutRepository;
     }
 
     public List<Item> getAllItems() {
-        return itemRepository.findAll();
+        return itemRepository.findByArchivedFalse();
     }
 
     public Item getItemById(Long id) {
@@ -99,6 +103,29 @@ public class ItemServiceImpl implements ItemService {
     }
 
     public void deleteItem(Long id) {
+        Item item = itemRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Item with ID " + id + " not found"));
+
+        if (checkoutRepository.countByItem(item) > 0)
+            throw new ItemNotDeletableException(item.getName() + " has checkout history and cannot be deleted. Retire it instead.");
+
+        if (itemPhotoRepository.existsById(id))
+            itemPhotoRepository.deleteById(id);
+
         itemRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Item> getAllItemsIncludingArchived() {
+        return itemRepository.findAll();
+    }
+
+    @Override
+    public Item setArchived(Long id, boolean archived) {
+        Item item = itemRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Item with ID " + id + " not found"));
+
+        item.setArchived(archived);
+        return itemRepository.save(item);
     }
 }

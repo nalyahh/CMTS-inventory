@@ -60,7 +60,8 @@ public class ItemMapperImpl implements ItemMapper {
                 item.getQuantity() - checkoutRepository.countByItemAndReturnedAtIsNull(item),
                 item.getNotes(),
                 itemPhotoRepository.existsById(item.getId()) ? "/items/" + item.getId() + "/photo" : null,
-                item.getProduction() != null ? item.getProduction().getId() : null
+                item.getProduction() != null ? item.getProduction().getId() : null,
+                item.isArchived()
         );
     }
 }
