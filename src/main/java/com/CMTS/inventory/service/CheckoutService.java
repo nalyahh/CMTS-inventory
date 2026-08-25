@@ -12,4 +12,6 @@ public interface CheckoutService {
     Checkout checkInItem(Long itemId);
 
     List<Checkout> getAllActiveCheckouts();
+
+    List<Checkout> getMyActiveCheckouts(String email);
 }

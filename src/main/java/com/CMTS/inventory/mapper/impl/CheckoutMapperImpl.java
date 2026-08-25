@@ -23,8 +23,10 @@ public class CheckoutMapperImpl implements CheckoutMapper{
         return new CheckoutDto(
                 checkout.getId(),
                 checkout.getItem().getId(),
+                checkout.getItem().getName(),
                 checkout.getUser().getId(),
                 checkout.getProduction().getId(),
+                checkout.getProduction().getName(),
                 checkout.getCheckedOutAt(),
                 checkout.getDueDate(),
                 checkout.getReturnedAt()

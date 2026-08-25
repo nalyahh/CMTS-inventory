@@ -10,6 +10,7 @@ import com.CMTS.inventory.service.CheckoutService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,6 +45,15 @@ public class CheckoutController {
     @GetMapping
     public ResponseEntity<List<CheckoutDto>> getAllActiveCheckouts() {
         List<Checkout> checkouts = checkoutService.getAllActiveCheckouts();
+        List<CheckoutDto> checkoutDtos = checkouts.stream()
+                .map(checkoutMapper::toDto)
+                .toList();
+        return ResponseEntity.ok(checkoutDtos);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<List<CheckoutDto>> getAllMyActiveCheckouts(Authentication authentication) {
+        List<Checkout> checkouts = checkoutService.getMyActiveCheckouts(authentication.getName());
         List<CheckoutDto> checkoutDtos = checkouts.stream()
                 .map(checkoutMapper::toDto)
                 .toList();

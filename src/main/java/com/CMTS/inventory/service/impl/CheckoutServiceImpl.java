@@ -80,4 +80,11 @@ public class CheckoutServiceImpl implements CheckoutService {
     public List<Checkout> getAllActiveCheckouts() {
         return checkoutRepository.findByReturnedAtIsNull();
     }
+
+    @Override
+    public List<Checkout> getMyActiveCheckouts(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User with email " + email + " not found"));
+        return checkoutRepository.findByUserAndReturnedAtIsNull(user);
+    }
 }

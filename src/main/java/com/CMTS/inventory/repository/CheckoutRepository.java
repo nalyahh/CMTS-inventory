@@ -24,4 +24,6 @@ public interface CheckoutRepository extends JpaRepository<Checkout, Long> {
 
     List<Checkout> findByProductionAndReturnedAtIsNull(Production production);
 
+    List<Checkout> findByUserAndReturnedAtIsNull(User user);
+
 }
