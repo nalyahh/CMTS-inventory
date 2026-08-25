@@ -43,21 +43,48 @@ function AdminPage() {
     )
     const [photoFile, setPhotoFile] = useState(null)
     const [fileInputKey, setFileInputKey] = useState(0)
+    const [editingId, setEditingId] = useState(null)
     const [previewUrl, setPreviewUrl] = useState('')
 
     function updateField(field, value) {
         setForm({ ...form, [field]: value })
     }
 
-    async function handleAddItem(e) {
+    function startEdit(item) {
+        setForm({
+            name: item.name,
+            location: item.location,
+            category: item.category,
+            quantity: item.quantity,
+            notes: item.notes || ''
+        })
+        setEditingId(item.id)
+        setPhotoFile(null)
+        setFileInputKey(fileInputKey + 1)
+        setError('')
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+
+    function cancelEdit() {
+        setForm(emptyForm)
+        setEditingId(null)
+        setPhotoFile(null)
+        setFileInputKey(fileInputKey + 1)
+    }
+
+    async function handleSubmit(e) {
         e.preventDefault()
         try {
-            const response = await api.post('/items', {
+            const body = {
                 ...form,
                 quantity: Number(form.quantity),
                 notes: form.notes || null,
                 photoURL: null
-            })
+            }
+
+            const response = editingId
+                ? await api.put(`/items/${editingId}`, body)
+                : await api.post('/items', body)
 
             if (photoFile) {
                 const resized = await resizeImage(photoFile, 800)
@@ -66,12 +93,10 @@ function AdminPage() {
                 await api.post(`/items/${response.data.id}/photo`, formData)
             }
 
-            setForm(emptyForm)
-            setPhotoFile(null)
-            setFileInputKey(fileInputKey + 1)
+            cancelEdit()
             loadItems()
         } catch (error) {
-            setError(error.response?.data?.message || 'Could not add the item.')
+            setError(error.response?.data?.message || 'Could not save the item.')
         }
     }
 
@@ -131,8 +156,8 @@ function AdminPage() {
                     <>
                         {error && <div className="error-banner">{error}</div>}
                         <h2>Items</h2>
-                        <h2>Add an item</h2>
-                        <form className="admin-form" onSubmit={handleAddItem}>
+                        <h2>{editingId ? 'Edit item' : 'Add an item'}</h2>
+                        <form className="admin-form" onSubmit={handleSubmit}>
                             <input
                                 placeholder="Name"
                                 value={form.name}
@@ -196,7 +221,10 @@ function AdminPage() {
                                 />
                                 <span className="file-name">{photoFile ? photoFile.name : 'No photo chosen'}</span>
                             </div>
-                            <button type="submit">Add Item</button>
+                            <button type="submit">{editingId ? 'Save Changes' : 'Add Item'}</button>
+                            {editingId && (
+                                <button type="button" className="row-btn" onClick={cancelEdit}>Cancel</button>
+                            )}
                         </form>
                         <table className="admin-table">
                             <thead>
@@ -224,6 +252,7 @@ function AdminPage() {
                                     </span>
                                     </td>
                                     <td className="row-actions">
+                                        <button className="row-btn" onClick={() => startEdit(item)}>Edit</button>
                                         <button className="row-btn" onClick={() => handleRetire(item)}>
                                             {item.archived ? 'Restore' : 'Retire'}
                                         </button>
