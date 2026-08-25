@@ -49,8 +49,7 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         int activeCheckouts = checkoutRepository.countByItemAndReturnedAtIsNull(item);
         if (activeCheckouts >= item.getQuantity())
-            throw new ItemNotAvailableException("All " + item.getQuantity() + " of " + item.getName() + " are already checked out");
-
+            throw new ItemNotAvailableException(item.getName() + " is not available! (0 of " + item.getQuantity() + " left)");
         Checkout checkout = new Checkout();
         checkout.setItem(item);
         checkout.setUser(user);

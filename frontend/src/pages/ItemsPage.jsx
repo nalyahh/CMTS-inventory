@@ -34,9 +34,10 @@ const CATEGORY_STYLES = {
     HAIR_MAKEUP: { background: '#FDE1FF', color: '#B455C0' },
     INSTRUMENTS: { background: '#E1FDF7', color: '#3FB3A9' },
 }
+
 function quantityClass(available, total) {
     if (available === 0) return 'quantity-badge qty-red'
-    if (available < total) return 'quantity-badge qty-yellow'
+    if (available < total/2) return 'quantity-badge qty-yellow'
     return 'quantity-badge qty-green'
 }
 
@@ -49,6 +50,7 @@ function ItemsPage() {
     const[productions, setProductions] = useState([])
     const [productionSearch, setProductionSearch] = useState('')
     const navigate = useNavigate()
+    const [checkoutError, setCheckoutError] = useState('')
 
     function handleLogout() {
         localStorage.removeItem('token')
@@ -58,6 +60,7 @@ function ItemsPage() {
     function closeModal() {
         setCheckoutItem(null)
         setProductionSearch('')
+        setCheckoutError('')
     }
 
     function handleCheckout(productionId) {
@@ -71,8 +74,10 @@ function ItemsPage() {
                 return api.get('/items')
             })
             .then(response => setItems(response.data))
-            .catch(error => console.error('Checkout failed:', error))
-    }
+            .catch(error => {
+                const message = error.response?.data?.message || 'Something went wrong. Please try again.'
+                setCheckoutError(message)
+            })    }
 
     useEffect(() => {
         api.get('/items')
@@ -160,6 +165,7 @@ function ItemsPage() {
                             <div className="modal" onClick={e => e.stopPropagation()}>
                                 <h2>Check out {checkoutItem.name}</h2>
                                 <p>Which production is this for?</p>
+                                {checkoutError && <div className="error-banner">{checkoutError}</div>}
                                 <input
                                     type="text"
                                     className="production-input"

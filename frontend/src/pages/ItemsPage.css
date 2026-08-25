@@ -218,3 +218,10 @@
     font-family: 'Roboto', sans-serif;
 }
 
+.error-banner {
+    background: #FDC1C1;
+    color: #890000;
+    padding: 10px 16px;
+    border-radius: 9px;
+    margin-bottom: 16px;
+}
