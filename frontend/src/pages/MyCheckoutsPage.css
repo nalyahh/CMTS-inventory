@@ -1,0 +1,72 @@
+.checkouts-page {
+    min-height: 100vh;
+    background: #F3EFE6;
+    font-family: 'Roboto', sans-serif;
+}
+
+.checkouts {
+    padding: 24px 56px;
+}
+
+.checkouts h1 {
+    color: #113478;
+    font-size: 40px;
+    margin: 0 0 24px;
+}
+
+.checkouts-empty {
+    color: #888;
+    font-size: 18px;
+}
+
+.checkout-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 700px;
+}
+
+.checkout-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 3px 3px 7px rgba(0, 0, 0, .25);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.checkout-item {
+    color: #113478;
+    font-size: 22px;
+    margin: 0;
+}
+
+.checkout-production {
+    color: #6DB2F3;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.checkout-due {
+    color: #A88334;
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.checkin-btn {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 9px;
+    background: #113478;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.checkin-btn:hover {
+    background: #1a4699;
+}

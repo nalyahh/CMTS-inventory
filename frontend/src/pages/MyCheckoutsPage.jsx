@@ -1,7 +1,14 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
 import Navbar from '../components/Navbar'
+import './MyCheckoutsPage.css'
 
+
+function formatDate(dateString) {
+    const [year, month, day] = dateString.split('-')
+    const date = new Date(year, month - 1, day)
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+}
 
 function MyCheckoutsPage() {
     const [checkouts, setCheckouts] = useState([])
@@ -49,17 +56,30 @@ function MyCheckoutsPage() {
     }, [])
 
     return (
-        <div>
+        <div className="checkouts-page">
             <Navbar user={user} onLogout={handleLogout} />
-            <h1>My Checkouts</h1>
-            <ul>
-                {checkouts.map(checkout => (
-                    <li key={checkout.id}>
-                        {checkout.itemName} — {checkout.productionName}
-                        <button onClick={() => handleCheckIn(checkout.itemId)}>Check In</button>
-                    </li>
-                ))}
-            </ul>
+            <main className="checkouts">
+                <h1>My Checkouts</h1>
+
+                {checkouts.length === 0 ? (
+                    <p className="checkouts-empty">You don't have anything checked out right now.</p>
+                ) : (
+                    <div className="checkout-list">
+                        {checkouts.map(checkout => (
+                            <div className="checkout-card" key={checkout.id}>
+                                <div className="checkout-info">
+                                    <h3 className="checkout-item">{checkout.itemName}</h3>
+                                    <div className="checkout-production">{checkout.productionName}</div>
+                                    <div className="checkout-due">Due {formatDate(checkout.dueDate)}</div>
+                                </div>
+                                <button className="checkin-btn" onClick={() => handleCheckIn(checkout.itemId)}>
+                                    Check In
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </main>
         </div>
     )
 }
