@@ -112,3 +112,40 @@
 .location-options button:hover {
     background: #BFE3F5;
 }
+.file-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.file-field input[type="file"] {
+    display: none;
+}
+
+.file-button {
+    padding: 10px 18px;
+    border: 1px solid #F2D79D;
+    border-radius: 9px;
+    background: white;
+    color: #113478;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.file-button:hover {
+    background: #BFE3F5;
+}
+
+.file-name {
+    color: #888;
+    font-size: 14px;
+}
+
+.file-preview {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 9px;
+    border: 1px solid #F2D79D;
+}

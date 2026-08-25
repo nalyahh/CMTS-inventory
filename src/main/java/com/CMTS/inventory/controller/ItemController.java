@@ -6,13 +6,17 @@ import com.CMTS.inventory.domain.dto.CreateItemRequestDto;
 import com.CMTS.inventory.domain.dto.ItemDto;
 import com.CMTS.inventory.domain.dto.UpdateItemRequestDto;
 import com.CMTS.inventory.domain.entity.Item;
+import com.CMTS.inventory.domain.entity.ItemPhoto;
 import com.CMTS.inventory.mapper.ItemMapper;
 import com.CMTS.inventory.service.ItemService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -63,6 +67,21 @@ public class ItemController {
         Item item = itemService.updateItem(id, updateItemRequest);
         ItemDto updatedItemDto = itemMapper.toDto(item);
         return ResponseEntity.ok(updatedItemDto);
+    }
+
+    @PostMapping("/{id}/photo")
+    public ResponseEntity<ItemDto> uploadPhoto(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
+        itemService.savePhoto(id, file.getBytes(), file.getContentType());
+        Item item = itemService.getItemById(id);
+        return ResponseEntity.ok(itemMapper.toDto(item));
+    }
+
+    @GetMapping("/{id}/photo")
+    public ResponseEntity<byte[]> getPhoto(@PathVariable Long id) {
+        ItemPhoto photo = itemService.getPhoto(id);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(photo.getContentType()))
+                .body(photo.getData());
     }
 
 }

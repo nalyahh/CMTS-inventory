@@ -10,10 +10,25 @@ const emptyForm = {
     category: 'PROPS',
     quantity: 1,
     notes: '',
-    photoURL: ''
 }
 
 const CATEGORY_VALUES = ['SET', 'PROPS', 'SOUND', 'LIGHTS', 'COSTUMES', 'HAIR_MAKEUP', 'INSTRUMENTS']
+
+function resizeImage(file, maxWidth) {
+    return new Promise((resolve, reject) => {
+        const image = new Image()
+        image.onload = () => {
+            const scale = Math.min(1, maxWidth / image.width)
+            const canvas = document.createElement('canvas')
+            canvas.width = image.width * scale
+            canvas.height = image.height * scale
+            canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height)
+            canvas.toBlob(blob => resolve(blob), 'image/jpeg', 0.85)
+        }
+        image.onerror = reject
+        image.src = URL.createObjectURL(file)
+    })
+}
 
 function AdminPage() {
     const { user, loading, logout } = useCurrentUser()
@@ -26,25 +41,40 @@ function AdminPage() {
     const locationMatches = locations.filter(location =>
         location.toLowerCase().includes(form.location.toLowerCase()) && location !== form.location
     )
+    const [photoFile, setPhotoFile] = useState(null)
+    const [fileInputKey, setFileInputKey] = useState(0)
+    const [previewUrl, setPreviewUrl] = useState('')
 
     function updateField(field, value) {
         setForm({ ...form, [field]: value })
     }
 
-    function handleAddItem(e) {
+    async function handleAddItem(e) {
         e.preventDefault()
-        api.post('/items', {
-            ...form,
-            quantity: Number(form.quantity),
-            notes: form.notes || null,
-            photoURL: form.photoURL || null
-        })
-            .then(() => {
-                setForm(emptyForm)
-                loadItems()
+        try {
+            const response = await api.post('/items', {
+                ...form,
+                quantity: Number(form.quantity),
+                notes: form.notes || null,
+                photoURL: null
             })
-            .catch(error => setError(error.response?.data?.message || 'Could not add the item.'))
+
+            if (photoFile) {
+                const resized = await resizeImage(photoFile, 800)
+                const formData = new FormData()
+                formData.append('file', resized, 'photo.jpg')
+                await api.post(`/items/${response.data.id}/photo`, formData)
+            }
+
+            setForm(emptyForm)
+            setPhotoFile(null)
+            setFileInputKey(fileInputKey + 1)
+            loadItems()
+        } catch (error) {
+            setError(error.response?.data?.message || 'Could not add the item.')
+        }
     }
+
     function loadItems() {
         api.get('/items')
             .then(response => {
@@ -57,6 +87,19 @@ function AdminPage() {
     useEffect(() => {
         loadItems()
     }, [])
+
+    useEffect(() => {
+        if (!photoFile) {
+            setPreviewUrl('')
+            return
+        }
+
+        const url = URL.createObjectURL(photoFile)
+        setPreviewUrl(url)
+
+        return () => URL.revokeObjectURL(url)
+    }, [photoFile])
+
     return (
         <div className="admin-page">
             <Navbar user={user} onLogout={logout} />
@@ -126,11 +169,18 @@ function AdminPage() {
                                 value={form.notes}
                                 onChange={e => updateField('notes', e.target.value)}
                             />
-                            <input
-                                placeholder="Photo URL (optional)"
-                                value={form.photoURL}
-                                onChange={e => updateField('photoURL', e.target.value)}
-                            />
+                            <div className="file-field">
+                                {previewUrl && <img className="file-preview" src={previewUrl} alt="Preview" />}
+                                <label htmlFor="photo-input" className="file-button">Choose Photo</label>
+                                <input
+                                    id="photo-input"
+                                    type="file"
+                                    accept="image/*"
+                                    key={fileInputKey}
+                                    onChange={e => setPhotoFile(e.target.files[0])}
+                                />
+                                <span className="file-name">{photoFile ? photoFile.name : 'No photo chosen'}</span>
+                            </div>
                             <button type="submit">Add Item</button>
                         </form>
                         <table className="admin-table">

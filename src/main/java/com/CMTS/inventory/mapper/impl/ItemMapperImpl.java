@@ -8,15 +8,18 @@ import com.CMTS.inventory.domain.dto.UpdateItemRequestDto;
 import com.CMTS.inventory.domain.entity.Item;
 import com.CMTS.inventory.mapper.ItemMapper;
 import com.CMTS.inventory.repository.CheckoutRepository;
+import com.CMTS.inventory.repository.ItemPhotoRepository;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ItemMapperImpl implements ItemMapper {
 
     private final CheckoutRepository checkoutRepository;
+    private final ItemPhotoRepository itemPhotoRepository;
 
-    public ItemMapperImpl(CheckoutRepository checkoutRepository) {
+    public ItemMapperImpl(CheckoutRepository checkoutRepository, ItemPhotoRepository itemPhotoRepository) {
         this.checkoutRepository = checkoutRepository;
+        this.itemPhotoRepository = itemPhotoRepository;
     }
 
     @Override
@@ -56,7 +59,7 @@ public class ItemMapperImpl implements ItemMapper {
                 item.getQuantity(),
                 item.getQuantity() - checkoutRepository.countByItemAndReturnedAtIsNull(item),
                 item.getNotes(),
-                item.getPhotoURL(),
+                itemPhotoRepository.existsById(item.getId()) ? "/items/" + item.getId() + "/photo" : null,
                 item.getProduction() != null ? item.getProduction().getId() : null
         );
     }

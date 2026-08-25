@@ -1,10 +1,9 @@
 import './ItemsPage.css'
 import {useState, useEffect} from "react";
-import api from '../api'
+import api, { API_BASE } from '../api'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import useCurrentUser from '../hooks/useCurrentUser'
-
 const CATEGORY_LABELS = {
     SOUND: 'Sound',
     LIGHTS: 'Lights',
@@ -122,14 +121,14 @@ function ItemsPage() {
                             {category.label}
                         </button>
                         )}
-
                 </div>
                 <div className="item-grid">
                     {visibleItems.map(item => (
                         <div className="item-card" key={item.id}>
                             <div className="item-photo">
-                                <span className="item-badge category-badge" style={CATEGORY_STYLES[item.category]}>
-                                    {CATEGORY_LABELS[item.category]}
+                                {item.photoURL && <img src={`${API_BASE}${item.photoURL}`} alt={item.name} />}
+                            <span className="item-badge category-badge" style={CATEGORY_STYLES[item.category]}>
+                                {CATEGORY_LABELS[item.category]}
                                 </span>
                                 <span className={`item-badge ${quantityClass(item.availableQuantity, item.quantity)}`}>{item.availableQuantity} of {item.quantity}</span>
                             </div>
