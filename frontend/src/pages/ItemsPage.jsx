@@ -3,6 +3,7 @@ import {useState, useEffect} from "react";
 import api from '../api'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
+import useCurrentUser from '../hooks/useCurrentUser'
 
 const CATEGORY_LABELS = {
     SOUND: 'Sound',
@@ -43,7 +44,7 @@ function quantityClass(available, total) {
 
 function ItemsPage() {
     const [items, setItems] = useState([])
-    const [user, setUser] = useState(null)
+    const { user, logout } = useCurrentUser()
     const[searchQuery, setSearchQuery] = useState('')
     const[selectedCategory, setSelectedCategory] = useState('ALL')
     const[checkoutItem, setCheckoutItem] = useState(null)
@@ -52,11 +53,6 @@ function ItemsPage() {
     const navigate = useNavigate()
     const [checkoutError, setCheckoutError] = useState('')
     const [error, setError] = useState('')
-
-    function handleLogout() {
-        localStorage.removeItem('token')
-        setUser(null)
-    }
 
     function closeModal() {
         setCheckoutItem(null)
@@ -90,14 +86,6 @@ function ItemsPage() {
     }, [])
 
     useEffect(() => {
-        if (!localStorage.getItem('token')) return
-
-        api.get('/users/me')
-            .then(response => setUser(response.data))
-            .catch(() => localStorage.removeItem('token'))
-    }, [])
-
-    useEffect(() => {
         if (!user || !checkoutItem) return
 
         api.get(`/users/${user.id}/productions`)
@@ -112,7 +100,7 @@ function ItemsPage() {
     })
     return (
         <div className="items-page">
-            <Navbar user={user} onLogout={handleLogout} />
+            <Navbar user={user} onLogout={logout} />
             <main className="catalog">
                 <div className="catalog-header">
                     <h1>Item Catalog</h1>

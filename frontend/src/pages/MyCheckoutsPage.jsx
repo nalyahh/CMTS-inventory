@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import api from '../api'
 import Navbar from '../components/Navbar'
+import useCurrentUser from '../hooks/useCurrentUser'
 import './MyCheckoutsPage.css'
 
 function formatDate(dateString) {
@@ -19,7 +20,7 @@ function isOverdue(dateString) {
 
 function MyCheckoutsPage() {
     const [checkouts, setCheckouts] = useState([])
-    const [user, setUser] = useState(null)
+    const { user, logout } = useCurrentUser()
     const [error, setError] = useState('')
 
     function loadCheckouts() {
@@ -46,23 +47,10 @@ function MyCheckoutsPage() {
             })
     }
 
-    function handleLogout() {
-        localStorage.removeItem('token')
-        setUser(null)
-    }
-
-
-    useEffect(() => {
-        if (!localStorage.getItem('token')) return
-
-        api.get('/users/me')
-            .then(response => setUser(response.data))
-            .catch(() => localStorage.removeItem('token'))
-    }, [])
 
     return (
         <div className="checkouts-page">
-            <Navbar user={user} onLogout={handleLogout} />
+            <Navbar user={user} onLogout={logout} />
             <main className="checkouts">
                 <h1>My Checkouts</h1>
                 {error && <div className="error-banner">{error}</div>}
