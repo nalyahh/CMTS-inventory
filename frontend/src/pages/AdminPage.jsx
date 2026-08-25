@@ -189,7 +189,7 @@ function AdminPage() {
                                 <th>Name</th>
                                 <th>Category</th>
                                 <th>Location</th>
-                                <th>Qty</th>
+                                <th>Quantity</th>
                                 <th>Available</th>
                             </tr>
                             </thead>
