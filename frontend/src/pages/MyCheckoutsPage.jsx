@@ -1,9 +1,11 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
+import Navbar from '../components/Navbar'
 
 
 function MyCheckoutsPage() {
     const [checkouts, setCheckouts] = useState([])
+    const [user, setUser] = useState(null)
 
     function loadCheckouts() {
         const token = localStorage.getItem('token')
@@ -29,8 +31,26 @@ function MyCheckoutsPage() {
             .catch(error => console.error('Check in failed:', error))
     }
 
+    function handleLogout() {
+        localStorage.removeItem('token')
+        setUser(null)
+    }
+
+
+    useEffect(() => {
+        const token = localStorage.getItem('token')
+        if (!token) return
+
+        axios.get('http://localhost:8080/api/v1/users/me', {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+            .then(response => setUser(response.data))
+            .catch(() => localStorage.removeItem('token'))
+    }, [])
+
     return (
         <div>
+            <Navbar user={user} onLogout={handleLogout} />
             <h1>My Checkouts</h1>
             <ul>
                 {checkouts.map(checkout => (

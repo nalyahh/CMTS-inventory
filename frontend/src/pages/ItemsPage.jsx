@@ -2,7 +2,7 @@ import './ItemsPage.css'
 import {useState, useEffect} from "react";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom'
-import cmtsLogo from '../assets/cmts-logo.png'
+import Navbar from '../components/Navbar'
 
 const CATEGORY_LABELS = {
     SOUND: 'Sound',
@@ -71,7 +71,7 @@ function ItemsPage() {
             }
         )
             .then(() => {
-                setCheckoutItem(null)
+                closeModal()
                 return axios.get('http://localhost:8080/api/v1/items')
             })
             .then(response => setItems(response.data))
@@ -109,35 +109,7 @@ function ItemsPage() {
     })
     return (
         <div className="items-page">
-            <nav className="navbar">
-                <div className="navbar-lights">
-                    {Array.from({ length: 40 }).map((_, i) => (
-                        <span key={i} className="light" />
-                    ))}
-                </div>
-                <img src={cmtsLogo} alt="CMTS logo" className="navbar-logo" />
-                <div className="navbar-title">
-                    Columbia Musical Theatre Society
-                    <br />
-                    Inventory and Checkout
-                </div>
-                <div className="navbar-links">
-                    <a href="/">Item Catalog</a>
-                    <a href="/checkouts">My Checkouts</a>
-                    <a href="/admin">Admin</a>
-                </div>
-                <div className="navbar-user">
-                    {user ? (
-                        <div className="navbar-user">
-                            Hi, {user.name.split(' ')[0]}
-                            <span className="avatar">{user.name.charAt(0)}</span>
-                            <button className="logout-btn" onClick={handleLogout}>Log out</button>
-                        </div>
-                    ) : (
-                        <a className="navbar-signin" href="/login">Sign In</a>
-                    )}
-                </div>
-            </nav>
+            <Navbar user={user} onLogout={handleLogout} />
             <main className="catalog">
                 <div className="catalog-header">
                     <h1>Item Catalog</h1>
@@ -190,7 +162,7 @@ function ItemsPage() {
                         </div>
                     ))}
                     {checkoutItem && (
-                        <div className="modal-backdrop" onClick={() => setCheckoutItem(null)}>
+                        <div className="modal-backdrop" onClick={closeModal}>
                             <div className="modal" onClick={e => e.stopPropagation()}>
                                 <h2>Check out {checkoutItem.name}</h2>
                                 <p>Which production is this for?</p>
@@ -216,7 +188,7 @@ function ItemsPage() {
                                         ))}
                                 </div>
                                 {productions.length === 0 && <p>You aren't in any productions yet.</p>}
-                                <button className="modal-cancel" onClick={() => setCheckoutItem(null)}>Cancel</button>
+                                <button className="modal-cancel" onClick={closeModal}>Cancel</button>
                             </div>
                         </div>
                     )}
