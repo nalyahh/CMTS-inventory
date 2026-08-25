@@ -50,5 +50,17 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDto, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(ArchivedProductionException.class)
+    public ResponseEntity<ErrorDto> handleArchivedProductionException(ArchivedProductionException ex) {
+        ErrorDto errorDto = new ErrorDto(ex.getMessage());
+        return new ResponseEntity<>(errorDto, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorDto> handleUnexpectedException(Exception ex) {
+        ex.printStackTrace();
+        ErrorDto errorDto = new ErrorDto("Something went wrong on the server.");
+        return new ResponseEntity<>(errorDto, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
 }
