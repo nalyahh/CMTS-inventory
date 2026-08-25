@@ -3,7 +3,6 @@ import api from '../api'
 import Navbar from '../components/Navbar'
 import './MyCheckoutsPage.css'
 
-
 function formatDate(dateString) {
     const [year, month, day] = dateString.split('-')
     const date = new Date(year, month - 1, day)
@@ -21,13 +20,17 @@ function isOverdue(dateString) {
 function MyCheckoutsPage() {
     const [checkouts, setCheckouts] = useState([])
     const [user, setUser] = useState(null)
+    const [error, setError] = useState('')
 
     function loadCheckouts() {
         if (!localStorage.getItem('token')) return
 
         api.get('/checkouts/me')
-            .then(response => setCheckouts(response.data))
-            .catch(error => console.error('Failed to load checkouts:', error))
+            .then(response => {
+                setCheckouts(response.data)
+                setError('')
+            })
+            .catch(() => setError("Couldn't load your checkouts. Is the server running?"))
     }
 
     useEffect(() => {
@@ -37,7 +40,10 @@ function MyCheckoutsPage() {
     function handleCheckIn(itemId) {
         api.put(`/checkouts/items/${itemId}/checkin`)
             .then(() => loadCheckouts())
-            .catch(error => console.error('Check in failed:', error))
+            .catch(error => {
+                const message = error.response?.data?.message || 'Could not check that item in. Please try again.'
+                setError(message)
+            })
     }
 
     function handleLogout() {
@@ -59,7 +65,7 @@ function MyCheckoutsPage() {
             <Navbar user={user} onLogout={handleLogout} />
             <main className="checkouts">
                 <h1>My Checkouts</h1>
-
+                {error && <div className="error-banner">{error}</div>}
                 {checkouts.length === 0 ? (
                     <p className="checkouts-empty">You don't have anything checked out right now.</p>
                 ) : (

@@ -51,6 +51,7 @@ function ItemsPage() {
     const [productionSearch, setProductionSearch] = useState('')
     const navigate = useNavigate()
     const [checkoutError, setCheckoutError] = useState('')
+    const [error, setError] = useState('')
 
     function handleLogout() {
         localStorage.removeItem('token')
@@ -81,8 +82,11 @@ function ItemsPage() {
 
     useEffect(() => {
         api.get('/items')
-            .then(response => setItems(response.data))
-            .catch(error => console.error('Failed to load items:', error))
+            .then(response => {
+                setItems(response.data)
+                setError('')
+            })
+            .catch(() => setError("Couldn't load items. Is the server running?"))
     }, [])
 
     useEffect(() => {
@@ -120,7 +124,7 @@ function ItemsPage() {
                         onChange={e => setSearchQuery(e.target.value)}
                     />
                 </div>
-
+                {error && <div className="error-banner">{error}</div>}
                 <div className="category-pills">
                     {CATEGORIES.map(category => <button
                         key={category.value}
