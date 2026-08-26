@@ -78,6 +78,13 @@ public class ProductionController {
         return ResponseEntity.ok(productionDto);
     }
 
+    @PatchMapping("/{id}/unarchive")
+    public ResponseEntity<ProductionDto> unarchiveProduction(@PathVariable Long id) {
+        Production production = productionService.unarchiveProduction(id);
+        ProductionDto productionDto = productionMapper.toDto(production);
+        return ResponseEntity.ok(productionDto);
+    }
+
     @GetMapping("/{id}/users")
     public ResponseEntity<List<UserDto>> getAllUsers(@PathVariable Long id) {
         List<User> users = productionService.getAllUsers(id);

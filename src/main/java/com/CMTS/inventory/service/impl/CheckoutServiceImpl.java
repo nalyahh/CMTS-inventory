@@ -64,18 +64,19 @@ public class CheckoutServiceImpl implements CheckoutService {
         return checkoutRepository.save(checkout);
     }
 
-    public Checkout checkInItem(Long itemID) {
-        Item item = itemRepository.findById(itemID).orElseThrow(() -> new ResourceNotFoundException("Item with ID " + itemID + " not found"));
-        List<Checkout> activeCheckouts = checkoutRepository.findByItemAndReturnedAtIsNull(item);
+    public Checkout checkInItem(Long checkoutId) {
+        Checkout checkout = checkoutRepository.findById(checkoutId)
+                .orElseThrow(() -> new ResourceNotFoundException("Checkout with ID " + checkoutId + " not found"));
 
-        if(activeCheckouts.isEmpty())
-            throw new ResourceNotFoundException("No active checkout found for item " + itemID);
-        Checkout checkout = activeCheckouts.getFirst();
+        if (checkout.getReturnedAt() != null)
+            throw new ItemNotAvailableException(checkout.getItem().getName() + " has already been returned");
 
         checkout.setReturnedAt(LocalDateTime.now());
-        checkout.getItem().setStatus(AVAILABLE);
 
+        Item item = checkout.getItem();
+        item.setStatus(AVAILABLE);
         itemRepository.save(item);
+
         return checkoutRepository.save(checkout);
     }
 

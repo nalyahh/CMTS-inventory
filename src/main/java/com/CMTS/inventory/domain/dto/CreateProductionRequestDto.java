@@ -11,7 +11,6 @@ public record CreateProductionRequestDto(
         @NotBlank (message = ERROR_MESSAGE_NAME)
         @Length(max = 255, message = ERROR_MESSAGE_NAME)
         String name,
-        @FutureOrPresent(message = ERROR_MESSAGE_DATE)
         LocalDate startDate,
         @FutureOrPresent (message = ERROR_MESSAGE_DATE)
         LocalDate endDate) {

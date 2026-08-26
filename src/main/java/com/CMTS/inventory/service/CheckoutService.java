@@ -9,7 +9,7 @@ public interface CheckoutService {
 
     Checkout checkoutItem(CheckoutRequest request);
 
-    Checkout checkInItem(Long itemId);
+    Checkout checkInItem(Long checkoutId);
 
     List<Checkout> getAllActiveCheckouts();
 

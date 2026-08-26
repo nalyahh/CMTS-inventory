@@ -43,9 +43,9 @@ public class CheckoutController {
         return new ResponseEntity<>(createdCheckoutRequestDto, HttpStatus.CREATED);
     }
 
-    @PutMapping("/items/{itemId}/checkin")
-    public ResponseEntity<CheckoutDto> checkInItem(@PathVariable Long itemId) {
-        Checkout checkout = checkoutService.checkInItem(itemId);
+    @PutMapping("/{checkoutId}/checkin")
+    public ResponseEntity<CheckoutDto> checkInItem(@PathVariable Long checkoutId) {
+        Checkout checkout = checkoutService.checkInItem(checkoutId);
         CheckoutDto checkoutDto = checkoutMapper.toDto(checkout);
         return ResponseEntity.ok(checkoutDto);
     }

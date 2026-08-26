@@ -59,11 +59,13 @@ function ItemsPage() {
             .catch(error => console.error('Failed to load productions:', error))
     }, [checkoutItem, user])
 
-    const visibleItems = items.filter(item => {
-        const matchesCategory = selectedCategory === 'ALL' || item.category === selectedCategory
-        const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase())
-        return matchesCategory && matchesSearch
-    })
+    const visibleItems = items
+        .filter(item => {
+            const matchesCategory = selectedCategory === 'ALL' || item.category === selectedCategory
+            const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase())
+            return matchesCategory && matchesSearch
+        })
+        .sort((a, b) => a.name.localeCompare(b.name))
     return (
         <div className="items-page">
             <Navbar user={user} onLogout={logout} />

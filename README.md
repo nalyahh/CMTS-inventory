@@ -29,6 +29,10 @@ A props and equipment inventory management system for Columbia Musical Theatre S
 | GET | `/api/v1/items` | Get all items |
 | GET | `/api/v1/items/{id}` | Get item by ID |
 | POST | `/api/v1/items` | Create item (Admin only) |
+| POST | `/api/v1/items/{id}/photo` | Upload an item photo (Admin only) |
+| GET | `/api/v1/items/{id}/photo` | Get an item's photo |
+| PATCH | `/api/v1/items/{id}/archive` | Retire an item (Admin only) |
+| PATCH | `/api/v1/items/{id}/unarchive` | Restore a retired item (Admin only) |
 | PUT | `/api/v1/items/{id}` | Update item (Admin only) |
 | DELETE | `/api/v1/items/{id}` | Delete item (Admin only) |
 
@@ -40,7 +44,9 @@ A props and equipment inventory management system for Columbia Musical Theatre S
 | GET | `/api/v1/productions/name/{name}` | Get production by name |
 | GET | `/api/v1/productions/{id}/users` | Get all users in a production |
 | POST | `/api/v1/productions` | Create production (Admin only) |
+| PUT | `/api/v1/productions/{id}` | Update production (Admin only) |
 | PATCH | `/api/v1/productions/{id}/archive` | Archive production (Admin only) |
+| PATCH | `/api/v1/productions/{id}/unarchive` | Restore an archived production (Admin only) |
 | DELETE | `/api/v1/productions/{id}` | Delete production (Admin only, blocked if active checkouts exist) |
 
 ### Users
@@ -59,7 +65,7 @@ A props and equipment inventory management system for Columbia Musical Theatre S
 | GET | `/api/v1/checkouts` | Get all active checkouts |
 | GET | `/api/v1/checkouts/me` | Get the logged-in user's active checkouts |
 | POST | `/api/v1/checkouts` | Check out an item |
-| PUT | `/api/v1/checkouts/items/{itemId}/checkin` | Check in an item |
+| PUT | `/api/v1/checkouts/{checkoutId}/checkin` | Check in a specific checkout |
 
 ## Running Locally
 

@@ -38,8 +38,8 @@ function MyCheckoutsPage() {
         loadCheckouts()
     }, [])
 
-    function handleCheckIn(itemId) {
-        api.put(`/checkouts/items/${itemId}/checkin`)
+    function handleCheckIn(checkoutId) {
+        api.put(`/checkouts/${checkoutId}/checkin`)
             .then(() => loadCheckouts())
             .catch(error => {
                 const message = error.response?.data?.message || 'Could not check that item in. Please try again.'
@@ -66,7 +66,7 @@ function MyCheckoutsPage() {
                                     <div className={isOverdue(checkout.dueDate) ? 'checkout-due overdue' : 'checkout-due'}>
                                         Due {formatDate(checkout.dueDate)}
                                     </div>                                </div>
-                                <button className="checkin-btn" onClick={() => handleCheckIn(checkout.itemId)}>
+                                <button className="checkin-btn" onClick={() => handleCheckIn(checkout.id)}>
                                     Check In
                                 </button>
                             </div>

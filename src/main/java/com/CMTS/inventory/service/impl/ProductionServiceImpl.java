@@ -80,6 +80,15 @@ public class ProductionServiceImpl implements ProductionService {
         return productionRepository.save(production);
     }
 
+    @Override
+    public Production unarchiveProduction(Long id) {
+        Production production = productionRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Production with ID " + id + " not found"));
+
+        production.setArchived(false);
+        return productionRepository.save(production);
+    }
+
     public void deleteProduction(Long id) {
         Production production = productionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Production with ID " + id + " not found"));
