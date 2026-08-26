@@ -1,6 +1,7 @@
 package com.CMTS.inventory.service.impl;
 
 import com.CMTS.inventory.domain.CreateProductionRequest;
+import com.CMTS.inventory.domain.UpdateProductionRequest;
 import com.CMTS.inventory.domain.entity.Checkout;
 import com.CMTS.inventory.domain.entity.Production;
 import com.CMTS.inventory.domain.entity.User;
@@ -55,6 +56,17 @@ public class ProductionServiceImpl implements ProductionService {
     }
 
     @Override
+    public Production updateProduction(Long id, UpdateProductionRequest request) {
+        Production production = productionRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Production with ID " + id + " not found"));
+
+        production.setName(request.name());
+        production.setStartDate(request.startDate());
+        production.setEndDate(request.endDate());
+
+        return productionRepository.save(production);
+    }
+
     public Production archiveProduction(Long id) {
         Production production = productionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Production with ID " + id + " not found"));

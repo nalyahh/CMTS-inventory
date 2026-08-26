@@ -1,6 +1,7 @@
 package com.CMTS.inventory.service;
 
 import com.CMTS.inventory.domain.CreateProductionRequest;
+import com.CMTS.inventory.domain.UpdateProductionRequest;
 import com.CMTS.inventory.domain.entity.Production;
 import com.CMTS.inventory.domain.entity.User;
 
@@ -17,6 +18,8 @@ public interface ProductionService {
     List<User> getAllUsers (Long id);
 
     Production createProduction(CreateProductionRequest createProductionRequest);
+
+    Production updateProduction(Long id, UpdateProductionRequest request);
 
     Production archiveProduction(Long id);
 

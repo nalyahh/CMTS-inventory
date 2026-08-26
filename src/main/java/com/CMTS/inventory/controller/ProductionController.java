@@ -1,7 +1,9 @@
 package com.CMTS.inventory.controller;
 
 import com.CMTS.inventory.domain.CreateProductionRequest;
+import com.CMTS.inventory.domain.UpdateProductionRequest;
 import com.CMTS.inventory.domain.dto.CreateProductionRequestDto;
+import com.CMTS.inventory.domain.dto.UpdateProductionRequestDto;
 import com.CMTS.inventory.domain.dto.ProductionDto;
 import com.CMTS.inventory.domain.dto.UserDto;
 import com.CMTS.inventory.domain.entity.Production;
@@ -57,6 +59,14 @@ public class ProductionController {
     @GetMapping("/name/{name}")
     public ResponseEntity<ProductionDto> getProductionByName(@PathVariable String name) {
         Production production = productionService.getProductionByName(name);
+        ProductionDto productionDto = productionMapper.toDto(production);
+        return ResponseEntity.ok(productionDto);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductionDto> updateProduction(@PathVariable Long id, @Valid @RequestBody UpdateProductionRequestDto updateProductionRequestDto) {
+        UpdateProductionRequest updateProductionRequest = productionMapper.fromUpdateDTO(updateProductionRequestDto);
+        Production production = productionService.updateProduction(id, updateProductionRequest);
         ProductionDto productionDto = productionMapper.toDto(production);
         return ResponseEntity.ok(productionDto);
     }
