@@ -165,11 +165,13 @@
 
 .row-actions {
     display: flex;
-    gap: 8px;
+    gap: 14px;
     justify-content: flex-end;
 }
 
 .row-btn {
+    min-width: 85px;
+    text-align: center;
     padding: 6px 14px;
     border: 1px solid #F2D79D;
     border-radius: 9px;

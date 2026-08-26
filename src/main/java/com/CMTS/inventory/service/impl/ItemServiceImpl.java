@@ -13,6 +13,7 @@ import com.CMTS.inventory.repository.ItemRepository;
 import com.CMTS.inventory.repository.ProductionRepository;
 import com.CMTS.inventory.service.ItemService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -102,6 +103,7 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.save(item);
     }
 
+    @Transactional
     public void deleteItem(Long id) {
         Item item = itemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Item with ID " + id + " not found"));

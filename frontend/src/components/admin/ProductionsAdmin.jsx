@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import api from '../../api'
-
+import { formatDate } from '../../dates'
 function ProductionsAdmin() {
 
     const emptyForm = {
@@ -70,6 +70,14 @@ function ProductionsAdmin() {
             .catch(error => setError(error.response?.data?.message || 'Could not update the production.'))
     }
 
+    function handleDelete(production) {
+        if (!window.confirm(`Delete ${production.name}? This cannot be undone.`)) return
+
+        api.delete(`/productions/${production.id}`)
+            .then(() => loadProductions())
+            .catch(error => setError(error.response?.data?.message || 'Could not delete the production.'))
+    }
+
     return (
         <>
             {error && <div className="error-banner">{error}</div>}
@@ -117,10 +125,14 @@ function ProductionsAdmin() {
                 {sortedProductions.map(production =>
                     <tr key={production.id} className={production.archived ? 'archived-row' : ''}>
                         <td>{production.name}</td>
-                        <td>{production.startDate}</td>
-                        <td>{production.endDate}</td>
+                        <td>{formatDate(production.startDate)}</td>
+                        <td>{formatDate(production.endDate)}</td>
                         <td className="row-actions">
-                            ...Edit / Archive / Delete buttons...
+                            <button className="row-btn" onClick={() => startEdit(production)}>Edit</button>
+                            <button className="row-btn" onClick={() => handleArchive(production)}>
+                                {production.archived ? 'Restore' : 'Archive'}
+                            </button>
+                            <button className="row-btn danger" onClick={() => handleDelete(production)}>Delete</button>
                         </td>
 
                     </tr>)}

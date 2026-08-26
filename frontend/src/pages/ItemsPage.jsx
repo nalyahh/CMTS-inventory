@@ -54,9 +54,9 @@ function ItemsPage() {
     useEffect(() => {
         if (!user || !checkoutItem) return
 
-        api.get(`/users/${user.id}/productions`)
-            .then(response => setProductions(response.data))
-            .catch(error => console.error('Failed to load productions:', error))
+        api.get('/productions')
+            .then(response => setProductions(response.data.filter(production => !production.archived)))
+            .catch(() => setCheckoutError('Could not load the list of shows.'))
     }, [checkoutItem, user])
 
     const visibleItems = items
@@ -147,7 +147,7 @@ function ItemsPage() {
                                             </button>
                                         ))}
                                 </div>
-                                {productions.length === 0 && <p>You aren't in any productions yet.</p>}
+                                {productions.length === 0 && <p>There are no active shows yet.</p>}
                                 <button className="modal-cancel" onClick={closeModal}>Cancel</button>
                             </div>
                         </div>

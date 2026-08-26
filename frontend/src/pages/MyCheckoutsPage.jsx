@@ -3,12 +3,7 @@ import api from '../api'
 import Navbar from '../components/Navbar'
 import useCurrentUser from '../hooks/useCurrentUser'
 import './MyCheckoutsPage.css'
-
-function formatDate(dateString) {
-    const [year, month, day] = dateString.split('-')
-    const date = new Date(year, month - 1, day)
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-}
+import { formatDate } from '../dates.js'
 
 function isOverdue(dateString) {
     const [year, month, day] = dateString.split('-')
@@ -64,7 +59,7 @@ function MyCheckoutsPage() {
                                     <h3 className="checkout-item">{checkout.itemName}</h3>
                                     <div className="checkout-production">{checkout.productionName}</div>
                                     <div className={isOverdue(checkout.dueDate) ? 'checkout-due overdue' : 'checkout-due'}>
-                                        Due {formatDate(checkout.dueDate)}
+                                        Due: {formatDate(checkout.dueDate)}
                                     </div>                                </div>
                                 <button className="checkin-btn" onClick={() => handleCheckIn(checkout.id)}>
                                     Check In

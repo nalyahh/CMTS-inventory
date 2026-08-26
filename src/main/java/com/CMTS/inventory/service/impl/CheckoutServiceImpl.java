@@ -14,6 +14,7 @@ import com.CMTS.inventory.repository.ProductionRepository;
 import com.CMTS.inventory.repository.UserRepository;
 import com.CMTS.inventory.service.CheckoutService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -35,6 +36,7 @@ public class CheckoutServiceImpl implements CheckoutService {
         this.productionRepository = productionRepository;
     }
 
+    @Transactional
     public Checkout checkoutItem(CheckoutRequest request) {
         User user = userRepository.findById(request.userId())
                 .orElseThrow(() -> new ResourceNotFoundException("User with ID " + request.userId() + " not found"));
@@ -43,6 +45,14 @@ public class CheckoutServiceImpl implements CheckoutService {
                 .orElseThrow(() -> new ResourceNotFoundException("Production with ID " + request.productionId() + " not found"));
         if (production.isArchived())
             throw new ArchivedProductionException("Production " + production.getName() + " is archived and cannot be checked out against");
+
+        boolean alreadyJoined = user.getProductions().stream()
+                .anyMatch(p -> p.getId().equals(production.getId()));
+
+        if (!alreadyJoined) {
+            user.getProductions().add(production);
+            userRepository.save(user);
+        }
 
         Item item = itemRepository.findById(request.itemId())
                 .orElseThrow(() -> new ResourceNotFoundException("Item with ID " + request.itemId() + " not found"));
@@ -64,6 +74,7 @@ public class CheckoutServiceImpl implements CheckoutService {
         return checkoutRepository.save(checkout);
     }
 
+    @Transactional
     public Checkout checkInItem(Long checkoutId) {
         Checkout checkout = checkoutRepository.findById(checkoutId)
                 .orElseThrow(() -> new ResourceNotFoundException("Checkout with ID " + checkoutId + " not found"));
